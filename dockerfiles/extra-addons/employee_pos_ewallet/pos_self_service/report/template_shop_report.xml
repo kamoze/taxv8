@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<openerp>
+    <data>
+    
+    <template id="template_shop_report">
+        <t t-call="report.html_container">
+            <t t-foreach="doc_ids" t-as="o">
+                <t t-call="report.external_layout">
+                    <div class="page">
+                        <center><h2><strong>Shop Report</strong></h2></center>
+                        <div class="row">
+                        <div class="col-xs-50">
+                            <strong>From Date: </strong><span t-field="o.date_start" style="margin-right:20px"/>
+                            <strong>To Date: </strong><span t-field="o.date_end" />
+                        </div>
+                        <div class="col-xs-50">
+                            <strong>POS Interface:</strong><span t-if="o.interface == 'self_service'">Self Service </span>
+                                                           <span t-if="o.interface == 'normal'">Normal </span>
+                                                           <span t-if="not o.interface">-</span>
+                        </div>
+                        <div class="col-xs-50">
+                            <t t-foreach="summary_shop(o)" t-as="ord12">
+                                <h3>Shop: <span t-esc="ord12"/></h3>
+	                            <table class="table  table-round-border">
+	                                <thead>
+	                                    <tr class="text-center">
+	                                         <th>Order Ref.</th>
+	                                         <th class="text-center">Order Date</th>
+	                                         <th class="text-center">Session</th>
+	                                         <th class="text-center">State</th>
+	                                         <th class="text-right">Amount</th>
+	                                    </tr>
+	                                </thead>
+	                                <tbody>
+	                                    <tr t-foreach="ord12_value" t-as="ord_val">
+	                                       <td width="20%">
+	                                           <span t-esc="ord_val['name']"/>
+	                                       </td>
+	                                       <td align="center" width="15%">
+	                                           <span t-esc="ord_val['date_order']"/>
+	                                       </td>
+	                                       <td align="center" width="15%">
+	                                           <span t-esc="ord_val['session_name']"/>
+	                                       </td>
+	                                       <td align="center" width="15%">
+	                                            <span t-if="ord_val['state'] == 'draft'">New </span>
+	                                            <span t-if="ord_val['state'] == 'paid'">Paid </span>
+	                                            <span t-if="ord_val['state'] == 'done'">Done </span>
+	                                       </td>
+	                                       <td align="right" width="15%">
+	                                           <span t-esc="ord_val['amount']"/>
+	                                       </td>
+	                                       
+	                                   </tr>
+	                                </tbody>
+	                            </table>
+                            </t>
+                        </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    </data>
+</openerp>

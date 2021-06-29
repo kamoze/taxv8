@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="employee_deposites_form_view" model="ir.ui.view">
+            <field name="name">employee.deposites.form.view</field>
+            <field name="model">employee.deposits</field>
+            <field name="arch" type="xml" >
+                <form>
+                    <field name="create_invoice" invisible="1" />
+                    <header>
+                        <button name="act_invoice_deposite" type="object" string="Create Invoice" attrs="{'invisible':[('create_invoice','=',True)]}"/>
+                        <button name="act_invoice_pay_in_emp" type="object" string="Pay In"
+                                groups="account.group_account_user,account.group_account_manager"/>
+                        
+                    </header>
+                    <sheet>
+                        <div class="oe_right oe_button_box" name="buttons">
+                            <button class="oe_inline oe_stat_button" type="object"
+                                name="list_of_accounts" >
+                                <div>Invoices</div>
+                            </button>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name" required="1" attrs="{'readonly':[('create_invoice','=',True)]}" />
+                                <field name="employee_id" />
+
+                            </group>
+                            <group>
+                                <field name="amount" required="1" attrs="{'readonly':[('create_invoice','=',True)]}"/>
+                                <field name="paid_amount" readonly='1' />
+                                <field name="date" invisible="1" />
+                                <field name="create_date" attrs="{'readonly':[('create_invoice','=',True)]}" />
+                                <field name="source"/>
+                            </group>
+                        </group>
+                    </sheet>
+
+                     <div class="oe_chatter">
+                      <field name="message_follower_ids" widget="mail_followers"/>
+                      <field name="message_ids" widget="mail_thread"/>
+                  </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="employee_deposites_tree_view" model="ir.ui.view">
+            <field name="name">employee.deposites.tree.view</field>
+            <field name="model">employee.deposits</field>
+            <field name="arch" type="xml" >
+                <tree>
+                    <field name="name" />
+                    <field name="employee_id" />
+                    <field name="amount" sum="Unpaid" />
+                    <field name="paid_amount" sum="Paid" />
+                    <field name="date" />
+                    <field name="source"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_employee_deposite_search" model="ir.ui.view">
+                <field name="name">view.emplyee.deposite.search</field>
+                <field name="model">employee.deposits</field>
+                <field name="arch" type="xml">
+                    <search string="Search">
+	                    <field name="name" />
+	                    <group expand="0" string="Group By">
+	                        <filter string="Employee" context="{'group_by': 'name'}" icon="terp-stock_effects-object-colorize"/>
+	                    </group>
+                    </search>
+                </field>
+        </record>
+
+        <record id="view_employee_deposits_graph" model="ir.ui.view">
+            <field name="name">project.employee.deposits.graph</field>
+            <field name="model">employee.deposits</field>
+            <field name="arch" type="xml">
+                <graph type="pivot">
+                    <field name="name" type="row"/>
+                    <field name="amount" type="measure" />
+                    <field name="paid_amount" type="measure" />
+                </graph>
+            </field>
+        </record>
+
+
+        <record id="employee_deposites_action" model="ir.actions.act_window">
+            <field name="name">Employee Deposit</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">employee.deposits</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+        </record>
+
+
+        <menuitem id="menu_employee_deposite" name="E-wallet" parent="hr.menu_hr_root" sequence="39" groups="base.group_user,base.group_hr_user,base.group_hr_manager" />
+        <menuitem id="menu_action_employee_deposite" action="employee_deposites_action" name="Employee Deposit" parent="menu_employee_deposite" groups="base.group_user,base.group_hr_user,base.group_hr_manager" />
+
+
+         <record id="inherit_view_employee_form" model="ir.ui.view">
+            <field name="name">inherit.hr.employee.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <field name="identification_id" position="replace"/>
+                <field name="user_id" position="after">
+                    <field name="identification_id" string="Employee ID"/>
+                </field>
+                <field name="otherid" position="attributes">
+                    <attribute name="string">Staff ID New</attribute>
+                </field>
+
+                <!-- groups="account.group_account_manager"-->
+
+                <xpath expr="//form/sheet/notebook/page[@string='Public Information']" position="inside">
+                    <group>
+                        <group>
+                            <field name="employment_date" />
+                            <field name="next_of_kin_name" />
+                            <field name="next_of_kin_number" />
+                            <field name="relationship" />
+                        </group>
+                        <group>
+                            <field name="next_of_kin_address" />
+                        </group>
+                    </group>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page[@string='Public Information']" position="after">
+                    <page string="E-Wallet">
+                        <separator string="Employee Deposit" /><newline/>
+                        <field name="employee_deposit_ids" nolabel="1" readonly="1" >
+                            <tree>
+                                <field name="name" />
+			                    <field name="amount" sum="Unpaid" />
+			                    <field name="paid_amount" sum="Paid" />
+			                    <field name="date" />
+		                    </tree>
+                        </field>
+                        <group>
+                            <group col="6" colspan="4">
+                                <field name="pin" password="True"/>
+                                <field name="ean13" string="Account Number"/>
+				                <button name="%(point_of_sale.action_edit_ean)d" type="action" string="Set a Custom EAN" groups="account.group_account_user,account.group_account_manager"/>
+
+                            </group>
+                            <group>
+                                <field name="total_expense" string="Total Expenses"  style="font-weight: 900;" />
+                            </group>
+                            <group>
+                                <field name="available_balance" style="font-weight: 900;" />
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="emp_balance_amount" style="font-weight: 900;" />
+                            </group>
+                            <group>
+                                <field name="credit_limit"/>
+                            </group>
+                        </group>
+
+                        <group>
+                            <group>
+                                <button name="confirm_employee_reconcile_overspend" type="object" string="Reconcile OverSpend" groups="account.group_account_manager"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="employee_expenses_form_view" model="ir.ui.view">
+            <field name="name">employee.expenses.form.view</field>
+            <field name="model">employee.expenses</field>
+            <field name="arch" type="xml" >
+                <form create="false" edit="false">
+                    <field name="create_invoice" invisible="1" />
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" required="1" attrs="{'readonly':[('create_invoice','=',True)]}" />
+                                <field name="employee_id" />
+
+                            </group>
+                            <group>
+                                <field name="amount" required="1" attrs="{'readonly':[('create_invoice','=',True)]}" />
+                                <field name="source" attrs="{'readonly':[('create_invoice','=',True)]}" string="Description"/>
+                                <field name="date" required="1" attrs="{'readonly':[('create_invoice','=',True)]}" />
+                            </group>
+                        </group>
+                    </sheet>
+                     <div class="oe_chatter">
+                      <field name="message_follower_ids" widget="mail_followers"/>
+                      <field name="message_ids" widget="mail_thread"/>
+                  </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="employee_expenses_tree_view" model="ir.ui.view">
+            <field name="name">employee.expenses.tree.view</field>
+            <field name="model">employee.expenses</field>
+            <field name="arch" type="xml" >
+                <tree create="false" edit="false">
+                    <field name="name" />
+                    <field name="employee_id" />
+                    <field name="source" />
+                    <field name="amount" sum="Unpaid" />
+                    <field name="date" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_employee_expenses_search" model="ir.ui.view">
+                <field name="name">view.emplyee.expenses.search</field>
+                <field name="model">employee.expenses</field>
+                <field name="arch" type="xml">
+                    <search string="Search">
+                        <field name="name" />
+                        <group expand="0" string="Group By">
+                            <filter string="Employee" context="{'group_by': 'name'}" icon="terp-stock_effects-object-colorize"/>
+                        </group>
+                    </search>
+                </field>
+        </record>
+
+        <record id="view_employee_expenses_graph" model="ir.ui.view">
+            <field name="name">project.employee.deposits.graph</field>
+            <field name="model">employee.expenses</field>
+            <field name="arch" type="xml">
+                <graph type="pivot">
+                    <field name="name" type="row"/>
+                    <field name="amount" type="measure" />
+                </graph>
+            </field>
+        </record>
+
+        <record id="employee_expenses_action" model="ir.actions.act_window">
+            <field name="name">Employee Expenses</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">employee.expenses</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+        </record>
+
+        <menuitem id="menu_action_employee_expenses" action="employee_expenses_action" name="Employee Expenses" parent="menu_employee_deposite"  />
+
+        <!-- Inherit employee tree view to add balance field -->
+        <record id="inherit_view_employee_tree_balance" model="ir.ui.view">
+            <field name="name">inherit.hr.employee.tree.view</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='work_email']" position="after">
+                    <field name="available_balance"/>
+                </xpath>
+
+            </field>
+        </record>
+
+
+
+    </data>
+</openerp>

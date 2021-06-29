@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+      <record id="student_reconcile_employee_credit_form_view" model="ir.ui.view">
+          <field name="name">student.reconcile.employee.credit.view</field>
+          <field name="model">student.reconcile.employee.credit</field>
+          <field name="arch" type="xml" >
+              <form>
+                  <sheet>
+                      <p>Are you want to reconcile credit amout???</p>
+                      <footer>
+                          <button name="student_update_credit_amount_button" type="object" string="Reconcile"/>
+                          <button string="Cancel" class="oe_link" special="cancel" />
+                      </footer>
+                  </sheet>
+              </form>
+          </field>
+      </record>
+
+        <record id="student_reconcile_employee_credit_action" model="ir.actions.act_window">
+          <field name="name">student.reconcile.employee.credit</field>
+          <field name="type">ir.actions.act_window</field>
+          <field name="res_model">student.reconcile.employee.credit</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">form</field>
+          <field name="target">new</field>
+      </record>
+
+      <!--<menuitem id="main_menu_action_employee_fund_transfer" name="E-wallet Transfer" parent="menu_employee_deposite" groups="base.group_user,base.group_hr_user,base.group_hr_manager" />-->
+      <menuitem id="sub_reconcile_student_credit" action="student_reconcile_employee_credit_action" name="Reconcile Overspend" parent="main_menu_action_ewallet_transfer" groups="account.group_account_manager" />
+
+    </data>
+</openerp>

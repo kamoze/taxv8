@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<openerp>
+    <data>
+        <record id="pos_self_service_wiz_view" model="ir.ui.view">
+            <field name="name">POS Self Service</field>
+            <field name="model">pos.self.service.wizard</field>
+            <field name="arch" type="xml">
+                <form string="POS Self Service">
+                    <group col="4">
+                        <field name="user_type"/>
+
+                        <field name="staff_id"
+                               attrs="{'invisible': [('user_type', '!=', 'staff')]}" options="{'no_create': True}"/>
+                        <field name="PIN" password='True'
+                               attrs="{'invisible': [('user_type', '=', False)]}"/>
+                        <field name="stock_location_id" options="{'no_create': True}" widget="selection"/>
+                    </group>
+                    <footer>
+                        <button string="Login" name="pos_self_service_login" type="object" default_focus="1" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="pos_self_service_confirmation_wizard" model="ir.ui.view">
+            <field name="name">POS Self Service</field>
+            <field name="model">pos.order.confirm.wizard</field>
+            <field name="arch" type="xml">
+                <form string="POS Self Service">
+                    <div>
+                        Are you sure you want to place this order ?
+                    </div>
+                    <field name="order_id" invisible="1"/>
+                    <footer>
+                        <button name="order_confirm" string="Confirm" class="oe_highlight" type="object"/>
+                        <button string="Cancel" class="btn-default" type="object" name="order_delete"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_pos_self_service_wizard" model="ir.actions.act_window">
+            <field name="name">POS Self Service</field>
+            <field name="res_model">pos.self.service.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="pos_self_service_wiz_view"/>
+            <field name="target">new</field>
+        </record>
+
+    <menuitem name="POS Self Service" parent="point_of_sale.menu_point_of_sale" id="pos_self_service_wiz_menu" action="action_pos_self_service_wizard" 
+              groups="aces_group_self_service,base.group_user,base.group_hr_user,base.group_hr_manager" sequence="2"/>
+
+
+    <!--  Inherit menu for POS to add access rights -->
+     <menuitem id="point_of_sale.menu_point_root" name="Point Of Sale"
+                  groups="point_of_sale.group_pos_manager,point_of_sale.group_pos_user,base.group_portal,base.group_user,base.group_hr_user,base.group_hr_manager"/>
+
+    <menuitem parent="point_of_sale.menu_point_of_sale" id="point_of_sale.menu_point_ofsale"
+              action="point_of_sale.action_pos_pos_form" sequence="2" groups="point_of_sale.group_pos_manager,point_of_sale.group_pos_user,base.group_portal,base.group_user,base.group_hr_user,base.group_hr_manager"/>
+
+    </data>
+</openerp>

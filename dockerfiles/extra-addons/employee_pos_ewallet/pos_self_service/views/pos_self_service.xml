@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- vim:fdn=3:
+-->
+<openerp>
+    <data>
+    
+        <!-- <template id="assets_backend" name="pos_self_service assets" inherit_id="point_of_sale.index">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/pos_self_service/static/src/js/pos.js"></script>
+                <script type="text/javascript" src="/pos_self_service/static/src/js/lib/moment.js"></script>
+            </xpath>
+        </template> -->
+
+        <template id="index" name="pos_self_service index" inherit_id="point_of_sale.index">
+	        <xpath expr="." position="inside">
+	        	<link rel="stylesheet" href="/employee_pos_ewallet/static/src/css/pos.css" id="pos-stylesheet"/>
+	        	<link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css"/>
+                <link rel='stylesheet' href="/web/static/lib/jquery.ui/css/smoothness/jquery-ui-1.9.1.custom.css"/>
+	        </xpath>
+	    </template>
+
+        <template id="assets_backend" name="tree icon assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/employee_pos_ewallet/static/src/js/lib/moment.js"></script>
+                <script type="text/javascript" src="/employee_pos_ewallet/static/src/js/pos.js"></script>
+                <script type="text/javascript" src="/employee_pos_ewallet/static/src/js/main.js"></script>
+                <script type="text/javascript" src="/employee_pos_ewallet/static/src/js/backend.js"></script>
+            </xpath>
+        </template>
+
+        <menuitem name="Daily Operations" id="point_of_sale.menu_point_of_sale"
+                  groups="base.group_portal,base.group_user"
+                  parent="point_of_sale.menu_point_root" sequence="10"/>
+
+        <menuitem id="point_of_sale.menu_point_root" name="Point Of Sale"
+                  groups="point_of_sale.group_pos_manager,point_of_sale.group_pos_user,base.group_portal"
+       />
+
+        <menuitem action="point_of_sale.action_pos_session_opening"
+                  groups="point_of_sale.group_pos_manager,point_of_sale.group_pos_user"
+                  parent="point_of_sale.menu_point_of_sale"
+                  id="point_of_sale.menu_pos_session_opening" sequence="0"/>
+
+        <menuitem name="Products" id="point_of_sale.menu_point_of_sale_product"
+                  groups="point_of_sale.group_pos_manager,point_of_sale.group_pos_user"
+                  parent="point_of_sale.menu_point_root" sequence="15"/>
+
+       <menuitem parent="point_of_sale.menu_point_of_sale" id="point_of_sale.menu_point_ofsale" 
+                 action="point_of_sale.action_pos_pos_form" 
+                 groups="point_of_sale.group_pos_manager,point_of_sale.group_pos_user,base.group_portal"/>
+
+<!--         <menuitem name="Accounting" groups="pos_self_service.aces_group_self_service" id="account.menu_finance"/> -->
+
+    </data>
+</openerp>

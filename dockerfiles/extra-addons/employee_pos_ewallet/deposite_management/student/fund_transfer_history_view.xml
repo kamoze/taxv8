@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+      <record id="fund_transfer_history_form_view" model="ir.ui.view">
+          <field name="name">Fund.Transfer.form.view</field>
+          <field name="model">fund.transfer.history</field>
+          <field name="arch" type="xml" >
+              <form>
+                  <sheet>
+                      <group>
+                          <group>
+                            <field name="transfer_to_acc_no"/>
+                            <field name="date"/>
+                            <field name="amount_transfer"/>
+                          </group>
+                      </group>
+
+                  </sheet>
+              </form>
+          </field>
+      </record>
+
+      <record id="fund_transfer_history_tree_view" model="ir.ui.view">
+          <field name="name">Fund.Transfer.History.tree.view</field>
+          <field name="model">fund.transfer.history</field>
+          <field name="arch" type="xml" >
+              <tree create="false" edit="false">
+                <field name="transfer_to_acc_no"/>
+                <field name="date"/>
+                <field name="amount_transfer"/>
+              </tree>
+          </field>
+      </record>
+
+
+      <record id="fund_transfer_history_action_new" model="ir.actions.act_window">
+          <field name="name">Fund Transfer History</field>
+          <field name="type">ir.actions.act_window</field>
+          <field name="res_model">fund.transfer.history</field>
+          <field name="view_type">tree</field>
+          <field name="view_mode">form,tree</field>
+          <!--<field name="view_id" ref="fund_transfer_history_tree_view"/>-->
+      </record>
+
+      <!--<menuitem id="main_menu_action_ewallet_transfer" name="E-wallet Transfer" parent="menu_student_deposite" groups="openeducat_erp.group_op_student,deposite_management.deposite_management_group" />-->
+      <menuitem id="sub_menu_action_fund_transfer_history" action="fund_transfer_history_action_new" name="Fund Transfer History" parent="deposite_management.main_menu_action_ewallet_transfer" groups="openeducat_erp.group_op_student,deposite_management.deposite_management_group" />
+
+
+    </data>
+</openerp>

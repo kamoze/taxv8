@@ -1,0 +1,618 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Tax Calculator for corporate -->
+		<!-- form view -->
+<menuitem name="e-TAX" id="etax_top_menu"/>		
+		<record id="etax_tax_cal_corporate_form" model="ir.ui.view">
+			<field name="name">etax.tax.cal.individual.form1</field>
+			<field name="model">tax.calculator.individual</field>
+			<field name="arch" type="xml">
+				<form string="Tax Calculation" version="7.0">
+					<header>
+						<button name="calculate_tax" string="Calculate Tax" type="object" state="new" class="oe_heighlight" color="red"/>
+						<button name="send_email_to_admin" string="Send To Tax Admin" type="object" state="submit" class="oe_heighlight" color="red"/>
+						
+						<button name="send_demand_notice" string="Text Message" type="object" class="oe_highlight" color="red"/>
+						
+					</header>
+				<sheet>
+										
+					<group>
+						<group>						
+							<field name="name" domain="[('is_company','=',1)]"/>
+							<field name="user_id" required="1" readonly="1"/>
+							<field name="invoice_id" readonly="1"/>
+							<label for="street" string="Company Address"/>								
+                        		<field name="street" nolabel="1" placeholder="Street..."/>
+                        		<newline/>
+                        		<!--<field name="company_street2" nolabel="1"/>
+                        		<newline/>
+                        		<div class="address_format">
+                        			<field name="company_city" nolabel="1" placeholder="City" style="width: 40%%"/>
+                            		<field name="company_state_id" nolabel="1" placeholder="State" style="width: 34%%"/>
+                            		<field name="company_zip" nolabel="1" placeholder="ZIP" style="width: 20%%"/>
+                            	</div>
+                            	<newline/>
+                            	<div>
+                            	<field name="company_country_id" nolabel="1" placeholder="Country"/>
+                            </div>						
+							<field name="incorp_ref_no"/>
+							<field name="date"/>-->																							
+						</group>
+						<group>
+						<!--	<field name="tin_no"/>-->					
+							<!--<field name="business_nature"/>-->
+							<!--<field name="previous_turnover"/>
+							<field name="previous_revenue"/>
+							<field name="previous_tax_certificate"/>
+							<field name="previous_tax_paid"/>-->
+							<!--<field name="liquadation_concession_arranged"/>-->	
+							<field name="tax_rate"/>
+<!--							<field name="income_earned"/>-->
+<!--							<field name="income_unearned"/>-->
+<!--							<field name="statutory_reliefs"/>-->
+<!--							<field name="other_deductions"/>-->
+							<field name="annual_tax"/>
+							<field name="monthly_tax"/>
+
+							
+						</group>
+					</group>
+					<notebook>
+				        <page string="Income">
+				        	<group string="Self Employed">
+				           		<group >
+							    	<field name="trading_profit"/>
+							    	<field name="buisness_income"/>
+							    </group>
+							    <group >
+								    <field name="other_profits"/>
+								    <field name="professional_income"/>
+							    </group>
+							</group>
+						    <group string="Paid">
+						       <group >
+							        <field name="salary"/>
+							        <field name="commission"/>
+							        <field name="bonuses"/>
+							        <field name="gratuties"/>
+						       </group>
+						       <group >
+							        <field name="fees"/>
+							        <field name="benefits_in_kind"/>
+							        <field name="other_income"/>
+						       </group>
+						    </group>
+						</page>
+						<page string="Unearned Income">
+						    <group string="Unearned Income">
+						       <group>
+							       <field name="dividends"/>
+							       <field name="interest"/>
+							       <field name="rent"/>
+							   </group>
+						       <group >
+							        <field name="royalities"/>
+							        <field name="others"/>
+							   </group>
+						    </group>  
+						</page>
+						<page string="Satuatory Deduction">
+						    <group string="Satuatory">
+						       <group>
+							       <field name="gratuities"/>
+							       <field name="pensions_contributions"/>
+							       <field name="nhf_contributions"/>
+							       <field name="ins_superannuations"/>
+							       <field name="nhis_contributions"/>
+							       <field name="mortgage_interest"/>
+						       </group>
+						       <group>
+							        <field name="subuscription"/>
+							        <field name="life_assurance_relif"/>
+							        <field name="capital_allowances"/>
+							        <field name="balancing_charges"/>
+							        <field name="balancing_allowaces"/>
+							        <field name="losses"/>
+						      </group>
+						      </group>
+						  </page>
+						  <page string="Tax Summary">
+		  				      <group string="Summary">
+		  				      	<field name="total_amount" readonly="1"/>
+		  				       	<field name="tax_liability" readonly="1"/>
+		  				       	<field name="consolidated_relief_one" readonly="1"/>
+						        <field name="total_relief" readonly="1"/>
+						        <field name="net_taxable_income" readonly="1" invisible="1"/>
+								  <field name="net_taxable" readonly="1"/>
+						      </group>
+						 </page>
+			   		</notebook>
+					
+				</sheet>
+				<div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+				</form>
+			</field>
+		</record>
+		
+		<!-- Tree View -->
+		<record id="etax_tax_cal_corporate_tree" model="ir.ui.view">
+			<field name="name">etax.tax.cal.individual.tree1</field>
+			<field name="model">tax.calculator.individual</field>
+			<field name="arch" type="xml">
+				<tree string="Tax Calculation" version="7.0">
+					<field name="name"/>
+					
+					<field name="annual_tax"/>
+					<field name="monthly_tax"/>
+					
+					<!--<field name="incorp_ref_no"/>-->
+					<!--<field name="date"/>-->
+					<!--<field name="tin_no"/>-->
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Action for Tax Calculator for corporate -->
+		<record id="action_etax_tax_cal_corporate" model="ir.actions.act_window">
+            <field name="name">Tax Calculator - Corporate</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">tax.calculator.corporate</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+        <!-- Menu for Tax Assessment -->
+        <menuitem id="etax_tax_assessment_menu" parent="etax_top_menu" name="Tax Assessment" sequence="3"/>
+        
+        <!-- Menu for tax assessment for corporate -->
+       
+        
+        <!-- Tax Calculator for individual -->
+		<!-- form view -->
+		<record id="etax_tax_cal_individual_form1" model="ir.ui.view">
+			<field name="name">etax.tax.cal.individual.form</field>
+			<field name="model">tax.calculator.individual</field>
+			<field name="arch" type="xml">
+				<form string="Tax Calculation" version="7.0">
+				
+					<header>
+						
+<!--						<button name="calculate_tax" string="Calculate Tax" type="object" states="draft" class="oe_heighlight" color="red"/>-->
+						<button name="send_demand_notice" string="Text Message" type="object" class="oe_highlight" color="red"/>
+						<button name="action_submit" string="Submit" type="object" states="draft" class="oe_highlight" color="red"/>
+						<button name="action_done" string="Confirm Assessment" type="object" states="submit,confirm" class="oe_highlight" color="red" groups="base.group_etax_admin" />
+						<button name="create_invoice" string="Create Invoice" type="object" states="done" groups="etax.group_etax_manager" class="oe_gighlight" color="red"/>
+						<button name="action_reassessment" string="Re_assessment" groups="etax.group_etax_manager" type="object" states="submit" class="oe_highlight" color="red"/>
+						<button name="action_cancel" string="Cancel" type="object" states="submit,confirm" class="oe_highlight" color="red"/>
+						<button name="send_demand_notic_mail" string="Send By Email" type="object"/>
+						<button name="action_reset" string="Reset" type="object" states="cancel" class="oe_highlight" color="red"/>
+					   <!-- <button name="generate_invoice" string="Generate Invoice" type="object" state="done"/>-->
+						<field name="state" widget="statusbar"/>
+					</header>
+				<sheet>
+					<h1>
+						<field name="assesment_number"  readonly="1"/>
+					</h1>
+					<group>
+						<group>
+						    <!-- <field name="name1"/> -->
+							<field name="name"  on_change="onchange_is_partner(name)"/>
+							<field name="number" readonly="1"/>
+							<field name="tax_config_id" invisible="1"/>
+							<field name="tax_office_id" groups="etax.group_etax_manager"/>
+
+
+<!--							<field name="income_earned"/>-->
+<!--							<field name="income_unearned"/>-->
+<!--							<field name="statutory_reliefs"/>		-->
+						</group>
+						
+						<group>
+							<field name="user_id" invisible="1"/>
+							<field name="invoice_id" invisible="0"/>
+						<!-- 	<field name="other_deductions"/>
+							<field name="tax_rate"/> -->
+<!-- 							<field name="annual_tax"/>
+							<field name="monthly_tax"/> -->
+						</group>
+					</group>
+					<notebook attrs="{'readonly':[('state','!=', 'draft')]}">
+				        <page string="Income" attrs="{'readonly':[('state','!=', 'draft')]}">
+				        	<group string="Self Employed" attrs="{'readonly':[('state','!=', 'draft')]}">
+				           		<group attrs="{'readonly':[('state','!=', 'draft')]}">
+							    	<field name="trading_profit" attrs="{'readonly':[('state','!=', 'draft')]}"/>
+							    	<field name="buisness_income" attrs="{'readonly':[('state','!=', 'draft')]}"/>
+							    </group>
+							    <group >
+								    <field name="other_profits" attrs="{'readonly':[('state','!=', 'draft')]}"/>
+								    <field name="professional_income" attrs="{'readonly':[('state','!=', 'draft')]}"/>
+							    </group>
+							</group>
+						    <group string="Paid">
+						       <group attrs="{'readonly':[('state','!=', 'draft')]}">
+							        <field name="salary"/>
+							        <field name="commission"/>
+							        <field name="bonuses"/>
+							        <field name="gratuties"/>
+						       </group>
+						       <group attrs="{'readonly':[('state','!=', 'draft')]}">
+							        <field name="fees" attrs="{'readonly':[('state','!=', 'draft')]}"/>
+							        <field name="benefits_in_kind" attrs="{'readonly':[('state','!=', 'draft')]}"/>
+							        <field name="other_income" attrs="{'readonly':[('state','!=', 'draft')]}"/>
+						       </group>
+						    </group>
+						</page>
+						<page string="Unearned Income" attrs="{'readonly':[('state','!=', 'draft')]}">
+						    <group string="Unearned Income">
+						       <group>
+							       <field name="dividends" attrs="{'readonly':[('state','!=', 'draft')]}"/>
+							       <field name="interest" attrs="{'readonly':[('state','!=', 'draft')]}"/>
+							       <field name="rent" attrs="{'readonly':[('state','!=', 'draft')]}"/>
+							   </group>
+						       <group >
+							        <field name="royalities" attrs="{'readonly':[('state','!=', 'draft')]}"/>
+							        <field name="others" attrs="{'readonly':[('state','!=', 'draft')]}"/>
+							   </group>
+						    </group>  
+						</page>
+						<page string="Satuatory Deduction">
+						    <group string="Satuatory">
+						       <group>
+							       <field name="gratuities" attrs="{'readonly':[('state','!=', 'draft')]}"/>
+							       <field name="pensions_contributions" attrs="{'readonly':[('state','!=', 'draft')]}"/>
+							       <field name="nhf_contributions" attrs="{'readonly':[('state','!=', 'draft')]}"/>
+							       <field name="ins_superannuations" attrs="{'readonly':[('state','!=', 'draft')]}"/>
+							       <field name="nhis_contributions" attrs="{'readonly':[('state','!=', 'draft')]}"/>
+							       <field name="mortgage_interest" attrs="{'readonly':[('state','!=', 'draft')]}"/>
+						       </group>
+						       <group>
+							        <field name="subuscription" attrs="{'readonly':[('state','!=', 'draft')]}" />
+							        <field name="life_assurance_relif" attrs="{'readonly':[('state','!=', 'draft')]}" />
+							        <field name="capital_allowances" attrs="{'readonly':[('state','!=', 'draft')]}" />
+							        <field name="balancing_charges" attrs="{'readonly':[('state','!=', 'draft')]}" />
+							        <field name="balancing_allowaces" attrs="{'readonly':[('state','!=', 'draft')]}" />
+							        <field name="losses" attrs="{'readonly':[('state','!=', 'draft')]}" />
+						      </group>
+						      </group>
+						  </page>
+						  <page string="Tax Summary" attrs="{'readonly':[('state','!=', 'draft')]}">
+		  				      <group string="Summary">
+		  				      	<field name="total_amount" readonly="1"/>
+		  				       	<field name="tax_liability" readonly="1" />
+		  				       	<field name="consolidated_relief_one" readonly="1" />
+						        <field name="total_relief" readonly="1" />
+								  <field name="taxable_income"/>
+						        <field name="net_taxable_income" readonly="1"/>
+						      </group>
+						 </page>
+						 <page string="Other Info" attrs="{'readonly':[('state','!=', 'draft')]}">
+						   <group attrs="{'readonly':[('state','!=', 'draft')]}">
+						     <group>
+							    <field name="submit_date" readonly="True"  attrs="{'readonly':[('state','!=', 'draft')]}" />
+								<field name="reassesment_date" readonly="True" attrs="{'readonly':[('state','!=', 'draft')]}" />
+								<field name="confirm_date" readonly="True" attrs="{'readonly':[('state','!=', 'draft')]}" />
+								<field name="done_date" readonly="True" attrs="{'readonly':[('state','!=', 'draft')]}" />
+								<field name="invoice_date" readonly="True" attrs="{'readonly':[('state','!=', 'draft')]}" />
+								<field name="cancel_date" readonly="True" attrs="{'readonly':[('state','!=', 'draft')]}" />
+							 </group>
+							 <group>
+							   <field name="assessment_charges_product" attrs="{'invisible':True}"/>
+							   <field name="assessment_charges" attrs="{'readonly':[('state','!=', 'draft')]}" />
+							   <field name="admin_charges_product" attrs="{'invisible':True}"/>
+							   <field name="admin_charges" attrs="{'readonly':[('state','!=', 'draft')]}" />
+							 </group>
+						   </group>
+						 </page>
+			   		</notebook>
+				</sheet>
+				<div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+			</form>
+			</field>
+		</record>
+		
+		<!-- tree view -->
+		<record id="etax_tax_cal_individual_tree" model="ir.ui.view">
+			<field name="name">etax.tax.cal.individual.tree</field>
+			<field name="model">tax.calculator.individual</field>
+			<field name="arch" type="xml">
+				<tree string="Tax Calculation" version="7.0">
+					<field name="assesment_number"  readonly="1"/>
+					<field name="name"/>
+					<field name="invoice_id"/>
+					<field name="annual_tax"/>
+					<field name="monthly_tax"/>
+					<field name="tax_liability"/>
+					<field name="state"/>
+				</tree>
+			</field>
+		</record>
+		
+<!--('user_id', '=', uid)-->
+		
+		<!-- Action for Tax Calculator for individual -->
+		<record id="action_etax_tax_cal_individual" model="ir.actions.act_window">
+            <field name="name">Tax Calculator - Individual</field>
+            <!-- <field name="type">ir.actions.act_window</field> -->
+            <field name="res_model">tax.calculator.individual</field>
+            <field name="domain">[]</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="etax_tax_cal_individual_tree"/>
+            <field name="view_mode">tree,form</field>
+        </record>
+          <record id="etax_individual_action_tree2" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="etax_tax_cal_individual_tree"/>
+            <field name="act_window_id" ref="action_etax_tax_cal_individual"/>
+        </record>
+        <record id="etax_individual_action_form2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="etax_tax_cal_individual_form1"/>
+            <field name="act_window_id" ref="action_etax_tax_cal_individual"/>
+        </record>
+        <!--Action for tax Corporate-->
+       <record id="action_etax_tax_cal_corporate" model="ir.actions.act_window">
+            <field name="name">Tax Calculator - Corporate</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">tax.calculator.individual</field>
+            <field name="domain">[('type_tax','=','corporate'),('user_id', '=', uid)]</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="etax_tax_cal_corporate_tree"/>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+       <record id="etax_corporate_action_tree2" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="etax_tax_cal_corporate_tree"/>
+            <field name="act_window_id" ref="action_etax_tax_cal_corporate"/>
+        </record>
+        <record id="etax_corprorate_action_form2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="etax_tax_cal_corporate_form"/>
+            <field name="act_window_id" ref="action_etax_tax_cal_corporate"/>
+        </record>
+        <!-- Menu for tax assessment for individual -->
+        <menuitem id="etax_tax_assessment_individual_child" parent="etax_tax_assessment_menu" name="Individual" action="action_etax_tax_cal_individual" groups="base.group_tax_self_employed,base.group_tax_employed" sequence="2"/>
+       <menuitem id="etax_tax_assessment_corporate_child" parent="etax_tax_assessment_menu" name="Corporate" action="action_etax_tax_cal_corporate" sequence="1"/>
+
+        <!-- :::::::::::Tree view :::::::::::::: -->
+        <record id="etax_tax_certificate_tree" model="ir.ui.view">
+			<field name="name">etax.tax.certificate.tree</field>
+			<field name="model">tax.certificate</field>
+			<field name="arch" type="xml">
+				<tree string="Tax Certificate" version="7.0">
+					<field name="name"/>
+					<field name = "req_date" />
+					<field name = "user_id" />
+					<field name="date"/>
+					<field name="state"/>
+				</tree>
+			</field>
+		</record>
+        <!-- ::::::::::::::::Tax Certificate form::::::::::::::::: -->
+       <record id="etax_tax_certificate_form" model="ir.ui.view">
+			<field name="name">etax.tax.certificate.form</field>
+			<field name="model">tax.certificate</field>
+			<field name="arch" type="xml">
+				<form string="Tax Certificate" version="7.0">
+				<header>
+					<button name="action_cer_new" string="Request Tax Certificate" type="object" state="new" class="oe_highlight" color="red" attrs="{'invisible': [('state', 'in',['req_certificate', 'lib_pending','lib_approve', 'account_pending','account_approve', 'certificate','reject','close'])]}" />
+						<button name="action_certificate_new" string="Require Certificate" type="object" state="req_certificate" class="oe_highlight" color="red" attrs="{'invisible': [('state', 'in',['new', 'lib_pending','lib_approve', 'account_pending','account_approve', 'certificate','reject','close'])]}" />
+						<button name="action_lib_pending" string="Reject $ Email" type="object" groups="etax.group_etax_manager"
+								state="reject" class="oe_highlight" color="red" attrs="{'invisible': [('state', 'in',['req_certificate', 'new','lib_approve', 'account_approve', 'certificate','reject','close'])]}"/>
+						<button name="action_lib_approve" string="Liablity Approve" type="object" state="lib_pending" groups="etax.group_certificate_liability"
+								class="oe_highlight" color="red" attrs="{'invisible': [('state', 'in',['new', 'req_certificate','lib_approve', 'account_pending','account_approve', 'certificate','reject','close'])]}"/>
+						<button name="action_acc_pending" string="Check Account" type="object" state="lib_approve" groups="etax.group_etax_manager"
+								class="oe_highlight" color="red" attrs="{'invisible': [('state', 'in',['new', 'lib_pending','account_pending', 'req_certificate','account_approve', 'certificate','reject','close'])]}"/>
+						<button name="action_acc_approve" string="Account Approve" type="object" state="account_pending" groups="etax.group_certificate_account"
+								class="oe_highlight" color="red" attrs="{'invisible': [('state', 'in',['new', 'lib_pending','lib_approve', 'req_certificate','account_approve', 'certificate','reject','close'])]}"/>
+						<button name="action_certificate_done" string="Certificate Done" type="object" state="account_approve" groups="etax.group_certificate_print"
+								class="oe_highlight" color="red" attrs="{'invisible': [('state', 'in',['new', 'lib_pending','lib_approve', 'req_certificate','account_pending', 'certificate','reject','close'])]}"/>
+						<button name="action_close" string="Done" type="object" state="certificate" class="oe_highlight" color="red" groups="etax.group_etax_manager"
+								attrs="{'invisible': [('state', 'in',['new', 'lib_pending','lib_approve', 'req_certificate','account_pending', 'account_approve','reject','close'])]}"/>
+					<field name="state"  widget="statusbar" statusbar_visible="new,req_certificate,lib_pending,lib_approve,account_pending,account_approve,certificate" />
+				</header>
+				<sheet>
+					<group col = "4">
+						<field name = "name" />
+						<field name = "date" />
+						<field name = "user_id" />
+						<field name = "req_date" />
+						<field name = "lib_pending_date" />
+						<field name = "lib_approve_date" />
+						<field name = "acc_pending_date" />
+						<field name = "acc_approve_date" />
+						<field name = "certificate_date" />
+						<field name = "reject_date" />
+						<field name = "tax_cal_id" invisible = "1" />
+					</group>
+					<group>
+
+					</group>
+					<label for="certicate_approve" attrs="{'invisible': [('state', 'not in','account_pending')]}"/>
+					<field name="certicate_approve"  attrs="{'invisible': [('state', 'not in','account_pending')]}"/>
+					<label for="certicate_liability" attrs="{'invisible': [('state', 'not in','lib_pending')]}"/>
+					<field name="certicate_liability" attrs="{'invisible': [('state', 'not in','lib_pending')]}"/>
+					<label for="certicate_print"  attrs="{'invisible': [('state', 'not in','account_approve')]}"/>
+					<field name="certicate_print" attrs="{'invisible': [('state', 'not in','account_approve')]}"/>
+
+
+        		</sheet>
+					<div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+        		</form>
+        	</field>
+        </record>
+        
+		<!-- :::::::::::::::action for tax calculation::::::: -->
+		<record id="action_etax_tax_certificate" model="ir.actions.act_window">
+            <field name="name">Tax Certificate</field>
+            <field name="res_model">tax.certificate</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="etax_tax_certificate_form"/>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+        
+        <!-- :::::::::::Corporate Tax Tree view :::::::::::::: -->
+        <record id="etax_corporate_tax_tree" model="ir.ui.view">
+			<field name="name">etax.corpotate.tax.tree</field>
+			<field name="model">corporate.tax</field>
+			<field name="arch" type="xml">
+				<tree string="Corporate Tax" version="7.0">
+					<field name="name"/>
+					<field name="date"/>
+				</tree>
+			</field>
+		</record>
+		
+        <!-- ::::::::::::::::Corporate Tax form::::::::::::::::: -->
+       <record id="etax_corporate_tax_form" model="ir.ui.view">
+			<field name="name">etax.corporate.tax.form</field>
+			<field name="model">corporate.tax</field>
+			<field name="arch" type="xml">
+				<form string="Corporate Tax" version="7.0">
+				<header>
+						<button name="action_confirm_co" string="Confirm" type="object" state="new" class="oe_highlight" color="red" attrs="{'invisible': [('state', 'in',['confirm','tax_review','approve_review','claim_initiate','invoice_initiate','close'])]}" />
+						<button name="action_tax_review" string="Tax Review" type="object" state="confirm" class="oe_highlight" color="red" attrs="{'invisible': [('state', 'in',['new','tax_review','approve_review','claim_initiate','invoice_initiate','close'])]}" />
+						<button name="action_approve_review" string="Approve Review" type="object" state="tax_review" class="oe_highlight" color="red" attrs="{'invisible': [('state', 'in',['new','confirm','approve_review','claim_initiate','invoice_initiate','close'])]}"/>
+						<button name="action_claim_initiate" string="Notification $ Claim" type="object" state="approve_review" class="oe_highlight" color="red" attrs="{'invisible': [('state', 'in',['new','confirm','tax_review','claim_initiate','invoice_initiate','close'])]}"/>
+						<button name="action_invoice_initiate" string="Invoice Process Activated" type="object" state="approve_review" class="oe_highlight" color="red" attrs="{'invisible': [('state', 'in',['new','confirm','tax_review','claim_initiate','invoice_initiate','close'])]}"/>
+						<button name="action_close_co" string="Done" type="object" state="invoice_initiate" class="oe_highlight" color="red" attrs="{'invisible': [('state', 'in',['new','confirm','tax_review','claim_initiate','approve_review','close'])]}"/>
+						<field name="state"  widget="statusbar" statusbar_visible="new,confirm,tax_review,approve_review,claim_initiate,invoice_initiate,close" />
+				</header>
+				<sheet>
+					<group col = "4">
+						<field name = "name" />
+						<field name = "date" />
+						<field name = "user_id" />
+						<field name = "confirm_date" />
+						<field name = "tax_review_date" />
+						<field name = "approve_review_date" />
+						<field name = "claim_initiate_date" />
+						<field name = "invoice_initiate_date" />
+					</group>
+        		</sheet>
+        		</form>
+        	</field>
+        </record>
+        
+		<!-- :::::::::::::::action for Corporation Tax::::::: -->
+		<record id="action_etax_corporate_tax" model="ir.actions.act_window">
+            <field name="name">Corporate Tax</field>
+            <field name="res_model">corporate.tax</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="etax_corporate_tax_form"/>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+        <!-- :::::::::::Taxpayer Payment Tree view :::::::::::::: -->
+        <record id="etax_taxpayer_payment_tree" model="ir.ui.view">
+			<field name="name">etax.taxpayer.payment.tree</field>
+			<field name="model">taxpayer.payment</field>
+			<field name="arch" type="xml">
+				<tree string="Taxpayer Payment" version="7.0">
+					<field name="name"/>
+					<field name="date"/>
+					<field name = "user_id" />
+					<field name = "online_payment_date" />
+				</tree>
+			</field>
+		</record>
+		
+        <!-- ::::::::::::::::Taxpayer Payment form::::::::::::::::: -->
+       <record id="etax_taxpayer_payment_form" model="ir.ui.view">
+			<field name="name">etax.taxpayer.payment.form</field>
+			<field name="model">taxpayer.payment</field>
+			<field name="arch" type="xml">
+				<form string="Taxpayer Payment" version="7.0">
+				<header>
+						<button name="action_confirm_taxpayer" string="Online Payment" type="object" state="new" class="oe_highlight" color="red" attrs="{'invisible': [('state', 'in',['online_payment','payment_done','bank_transfer','bank_payment_confirm','close'])]}" />
+						<button name="action_payment_done" string="Online Payment Done" type="object" state="online_payment" class="oe_highlight" color="red" attrs="{'invisible': [('state', 'in',['new','payment_done','bank_transfer','bank_payment_confirm','close'])]}" />
+						<button name="action_bank_transfer" string="Bank Transfer" type="object" state="online_payment" class="oe_highlight" color="red" attrs="{'invisible': [('state', 'in',['new','payment_done','bank_transfer','bank_payment_confirm','close'])]}"/>
+						<button name="action_bank_pay_confirm" string="Bank payment Done $ Notify" type="object" state="bank_transfer" class="oe_highlight" color="red" attrs="{'invisible': [('state', 'in',['new','payment_done','online_payment','bank_payment_confirm','close'])]}"/>
+						<button name="action_close_tax" string="Close" type="object" state="bank_payment_confirm" class="oe_highlight" color="red" attrs="{'invisible': [('state', 'in',['new','payment_done','online_payment','bank_transfer','close'])]}"/>
+						<field name="state"  widget="statusbar" statusbar_visible="new,online_payment,payment_done,bank_transfer,bank_payment_confirm,close" />
+				</header>
+				<sheet>
+						<h1><field name = "tin" lable="TIN" readonly='1'/></h1>
+						<group col = "4">
+						<field name = "name" required='1'/>
+						<field name = "date" required='1'/>
+						<field name = "user_id"  readonly='1'/>
+						<field name = "online_payment_date" required='1'/>
+						<field name = "payment_done_date"  on_change="onchange_payment_done_date(payment_done_date)" required='1'/>
+						<field name = "bank_transfer_date" required='1'/>
+						<field name = "bank_payment_confirm_date" required='1'/>
+					</group>
+        		</sheet>
+        		</form>
+        	</field>
+        </record>
+
+		<record id="view_tax_payer_search" model="ir.ui.view">
+            <field name="name">taxpayer.payment.search</field>
+            <field name="model">taxpayer.payment</field>
+            <field name="arch" type="xml">
+                <search string="Analytic Account">
+                    <field name = "name"/>
+						<field name = "date" />
+						<field name = "user_id"  />
+						<field name = "online_payment_date" />
+						<field name = "payment_done_date"  />
+						<field name = "bank_transfer_date" />
+						<field name = "bank_payment_confirm_date"/>
+
+                    <group expand="0" string="Group By">
+                        <filter string="User" domain="[]" context="{'group_by':'user_id'}"/>
+
+                    </group>
+                </search>
+            </field>
+        </record>
+
+		<record id="action_etax_taxpayer_payment" model="ir.actions.act_window">
+            <field name="name">Taxpayer Payment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">taxpayer.payment</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="etax_taxpayer_payment_tree"/>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+		<!--&lt;!&ndash; :::::::::::::::action for Taxpayer Payment::::::: &ndash;&gt;-->
+		<!--<record id="action_etax_taxpayer_payment" model="ir.actions.act_window">-->
+            <!--<field name="name">Taxpayer Payment</field>-->
+            <!--<field name="res_model">taxpayer.payment</field>-->
+            <!--<field name="view_type">form</field>-->
+            <!--<field name="view_id" ref="etax_taxpayer_payment_form"/>-->
+            <!--<field name="view_mode">tree,form</field>-->
+        <!--</record>-->
+
+
+
+        
+        <!-- Menu for tax assessment for individual -->
+        <menuitem id="etax_tax_assessment_individual_child" parent="etax_tax_assessment_menu" name="Individual" action="action_etax_tax_cal_individual" sequence="2"/>
+        <menuitem id="etax_tax_certificate" parent="etax_tax_assessment_menu" name="Tax Certificate" action="action_etax_tax_certificate" sequence="3"/>
+        <menuitem id="etax_corporate_tax" parent="etax_tax_assessment_menu" name="Corporate Tax" action="action_etax_corporate_tax"
+				  groups = "base.group_tax_corporate" sequence="4"/>
+        <menuitem id="etax_taxpayer_payment" parent="etax_tax_assessment_menu" name="Taxpayer Payment" action="action_etax_taxpayer_payment" sequence="5" groups="etax.group_etax_manager"/>
+<menuitem id="etax_tax_assessment_corporate_child" parent="etax_tax_assessment_menu" name="Corporate" action="action_etax_tax_cal_corporate" groups="base.group_tax_corporate" sequence="1"/>
+        
+
+	</data>
+</openerp>

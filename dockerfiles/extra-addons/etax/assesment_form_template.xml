@@ -1,0 +1,330 @@
+<openerp>
+    <data>
+    <template id="assesment" name="Assesment" page="True">
+	<t t-call="website.layout">
+	<form class="info create" action="/info/enablers" method="POST">
+		<table class="table table-bordered">
+			<tr>
+				<td>
+					<h3>
+						<div class="row">
+							<div class="col-md-12 text-left mb16">
+								<h2><p style="color:#104A5A; position: relative;  left: 50px;">Income</p></h2>
+							</div>
+						</div>
+					</h3>
+
+                        <div class="row">
+						<div class="col-md-4 col-lg-3">
+							<label for="trading_profile" class="control-label"><p style="position: relative;  left: 100px;  padding-left: 2cm;">Trading Profit</p></label>
+						</div>
+						<div class="col-md-4 col-lg-2">
+							<input type="number" name="trading_profile" min="0" step="any" onkeyup="validateNumber()" onclick="validateNumber()" onchange="validateNumber()"  value="0" id="trading_profile"  class="form-control"/>
+
+						</div>
+						<div t-attf-class=" col-md-4 col-lg-3">
+							<label class="control-label" for="other_profit"><p style="position: relative;  left: 100px; padding-left: 2cm;">Other Profit</p></label>
+						</div>
+						<div class="col-md-4 col-lg-2">
+							<input type="number"  name="other_profit" min="0" step="any" onkeyup="validateNumber()" onclick="validateNumber()" onchange="validateNumber()" value="0" id="other_profit" class="form-control" autofocus="autofocus"
+							autocapitalize="off" />
+						</div>
+
+					</div>
+					<div class="row">
+						<div class="col-md-4 col-lg-3">
+							<label for="business_income" class="control-label"><p style="position: relative;  left: 100px;  padding-left: 2cm;">Business Income</p></label>
+						</div>
+						<div class="col-md-4 col-lg-2">
+							<input type="number" name="business_income" min="0" value="0" step="any" onkeyup="validateNumber()" onclick="validateNumber()" onchange="validateNumber()" id="business_income" class="form-control" autofocus="autofocus"
+							autocapitalize="off"/>
+						</div>
+						<div class="col-md-4 col-lg-3">
+							<label for="professional_income" class="control-label"><p style="position: relative;  left: 30px; padding-left: 2cm;">Professional/Vocational Income</p></label>
+						</div>
+						<!-- <div class="col-md-4 col-lg-3">
+							<p style="position: relative;"><input type="text" name="description" t-att-value="description" id="description" class="form-control"
+							required="required"/></p> -->
+							<div class="col-md-4 col-lg-2">
+							<input type="number" name="professional_income" min="0" step="any" value="0" onkeyup="validateNumber()" onclick="validateNumber()" onchange="validateNumber()" id="professional_income" class="form-control" autofocus="autofocus"
+							autocapitalize="off"/>
+						</div>
+					</div>
+                    <div class="row">
+						<div class="col-md-4 col-lg-3">
+							<label for="salary" class="control-label"><p style="position: relative;  left: 100px;  padding-left: 2cm;">Salary</p></label>
+						</div>
+						<div class="col-md-4 col-lg-2">
+							<input type="number" name="salary" value="0" min="0" step="any" id="salary" onkeyup="validateNumber()" onclick="validateNumber()" onchange="validateNumber()" class="form-control" autofocus="autofocus"
+							autocapitalize="off"/>
+						</div>
+						<div t-attf-class=" col-md-4 col-lg-3">
+							<label class="control-label" for="fees"><p style="position: relative;  left: 100px; padding-left: 2cm;">Fees</p></label>
+						</div>
+						<div class="col-md-4 col-lg-2">
+							<input type="number" name="fees" value="0" min="0" step="any" id="fees" onkeyup="validateNumber()" onclick="validateNumber()" onchange="validateNumber()" class="form-control" autofocus="autofocus"
+							autocapitalize="off"/>
+						</div>
+
+					</div>
+                    <div class="row">
+						<div class="col-md-4 col-lg-3">
+							<label for="commision" class="control-label"><p style="position: relative;  left: 100px;  padding-left: 2cm;">Commision</p></label>
+						</div>
+						<div class="col-md-4 col-lg-2">
+							<input type="number" name="commision" value="0" min="0" step="any" id="commision" onkeyup="validateNumber()" onclick="validateNumber()" onchange="validateNumber()" class="form-control" autofocus="autofocus"
+							autocapitalize="off"/>
+						</div>
+						<div t-attf-class=" col-md-4 col-lg-3">
+							<label class="control-label" for="benifit_in_kind"><p style="position: relative;  left: 100px; padding-left: 2cm;">Benifits In Kind</p></label>
+						</div>
+						<div class="col-md-4 col-lg-2">
+							<input type="number" name="benifit_in_kind" min="0" value="0" step="any" id="benifit_in_kind" onkeyup="validateNumber()" onclick="validateNumber()" onchange="validateNumber()" class="form-control" autofocus="autofocus"
+							autocapitalize="off"/>
+						</div>
+
+					</div>
+                     <div class="row">
+						<div class="col-md-4 col-lg-3">
+							<label for="bonus" class="control-label"><p style="position: relative;  left: 100px;  padding-left: 2cm;">Bonuses</p></label>
+						</div>
+						<div class="col-md-4 col-lg-2">
+							<input type="number" name="bonus" value="0" min="0" id="bonus" step="any" onkeyup="validateNumber()" onclick="validateNumber()" onchange="validateNumber()" class="form-control" autofocus="autofocus"
+							autocapitalize="off"/>
+						</div>
+						<div t-attf-class=" col-md-4 col-lg-3">
+							<label class="control-label" for="other_income"><p style="position: relative;  left: 100px; padding-left: 2cm;">Other Income</p></label>
+						</div>
+						<div class="col-md-4 col-lg-2">
+							<input type="number" name="other_income" value="0" min="0" step="any" id="other_income" onkeyup="validateNumber()" onclick="validateNumber()" onchange="validateNumber()" class="form-control" autofocus="autofocus"
+							autocapitalize="off"/>
+						</div>
+
+					</div>
+                    <div class="row">
+						<div class="col-md-4 col-lg-3">
+							<label for="gratuties" class="control-label"><p style="position: relative;  left: 100px;  padding-left: 2cm;">Gratuties</p></label>
+						</div>
+						<div class="col-md-4 col-lg-2">
+							<input type="number" name="gratuties" value="0" min="0" step="any" id="gratuties" onkeyup="validateNumber()" onclick="validateNumber()" onchange="validateNumber()" class="form-control" autofocus="autofocus"
+							autocapitalize="off"/>
+						</div>
+
+
+					</div>
+                    <h3>
+						<div class="row">
+							<div class="col-md-12 text-left mb16">
+								<h2><p style="color:#104A5A; position: relative;  left: 50px;">Unearned Income</p></h2>
+							</div>
+						</div>
+					</h3>
+
+                        <div class="row">
+						<div class="col-md-4 col-lg-3">
+							<label for="dividiends" class="control-label"><p style="position: relative;  left: 100px;  padding-left: 2cm;">Dividiends(Gross)</p></label>
+						</div>
+						<div class="col-md-4 col-lg-2">
+
+							<input type="number" name="dividiends" value="0" min="0" step="any" onkeyup="validateNumber()" onclick="validateNumber()" onchange="validateNumber()" id="dividiends" class="form-control" autofocus="autofocus"
+							autocapitalize="off"/>
+						</div>
+						<div t-attf-class=" col-md-4 col-lg-3">
+							<label class="control-label" for="royalities"><p style="position: relative;  left: 100px; padding-left: 2cm;">Royalities(Gross)</p></label>
+						</div>
+						<div class="col-md-4 col-lg-2">
+							<input type="number" name="royalities" value="0" min="0" step="any" onkeyup="validateNumber()" onclick="validateNumber()" onchange="validateNumber()" id="royalities" class="form-control" autofocus="autofocus"
+							autocapitalize="off" />
+						</div>
+
+					</div>
+					<div class="row">
+						<div class="col-md-4 col-lg-3">
+							<label for="interest" class="control-label"><p style="position: relative;  left: 100px;  padding-left: 2cm;">Interest(Gross)</p></label>
+						</div>
+						<div class="col-md-4 col-lg-2">
+							<input type="number" name="interest" value="0" min="0" step="any" id="interest" onkeyup="validateNumber()" onclick="validateNumber()" onchange="validateNumber()" class="form-control" autofocus="autofocus"
+							autocapitalize="off"/>
+						</div>
+						<div class="col-md-4 col-lg-3">
+							<label for="other_gross" class="control-label"><p style="position: relative;  left: 100px; padding-left: 2cm;">Other(Gross)</p></label>
+						</div>
+
+						<div class="col-md-4 col-lg-2">
+							<input type="number" name="other_gross" value="0" min="0" step="any" onkeyup="validateNumber()" onclick="validateNumber()" onchange="validateNumber()" id="other_gross" class="form-control" autofocus="autofocus"
+							autocapitalize="off"/>
+						</div>
+					</div>
+                    <div class="row">
+						<div class="col-md-4 col-lg-3">
+							<label for="rent_gross" class="control-label"><p style="position: relative;  left: 100px;  padding-left: 2cm;">Rent(Gross)</p></label>
+						</div>
+						<div class="col-md-4 col-lg-2">
+							<input type="number" name="rent_gross" value="0" min="0" step="any" onkeyup="validateNumber()" onclick="validateNumber()" onchange="validateNumber()" id="rent_gross" class="form-control" autofocus="autofocus"
+							autocapitalize="off"/>
+						</div>
+
+
+					</div>
+					<h3><div class="row"><div class="col-md-12 text-left mb16"><h2><p style="color:#104A5A; position: relative;  left: 50px;">Satuatory Deduction</p></h2>
+
+					</div>
+					</div>
+					</h3>
+					<div class="row">
+						<div class="col-md-4 col-lg-3"><label for="gratuities_sd" class="control-label"><p style="position: relative;  left: 100px;  padding-left: 2cm;">Gratuities</p></label>
+						</div>
+						<div class="col-md-4 col-lg-2"><input type="number" name="gratuities_sd" min="0" onkeyup="validateNumber()" onclick="validateNumber()" onchange="validateNumber()" step="any" value="0" id="gratuities_sd" class="form-control" autofocus="autofocus" autocapitalize="off"/>
+						</div>
+						<div t-attf-class=" col-md-4 col-lg-3"><label class="control-label" for="professional_body"><p style="position: relative;  left: 55px; padding-left: 2cm;">Subscription To Professional Body</p></label>
+						</div>
+						<div class="col-md-4 col-lg-2"><input type="number" name="professional_body" onkeyup="validateNumber()" onclick="validateNumber()" onchange="validateNumber()" min="0" step="any" value="0" id="professional_body" class="form-control" autofocus="autofocus" autocapitalize="off"/>
+						</div>
+					</div>
+					<div class="row"><div class="col-md-4 col-lg-3"><label for="pensions_contributions" class="control-label"><p style="position: relative;  left: 90px;  padding-left: 2cm;">Pensions Contributions</p></label>
+					</div>
+						<div class="col-md-4 col-lg-2"><input type="number" name="pensions_contributions" min="0" onkeyup="validateNumber()" onclick="validateNumber()" onchange="validateNumber()" step="any" value="0" id="pensions_contributions" class="form-control" autofocus="autofocus" autocapitalize="off"/>
+						</div>
+						<div class="col-md-4 col-lg-3"><label for="life_relief" class="control-label"><p style="position: relative;  left: 100px; padding-left: 2cm;">Life Assurance Refief</p></label>
+						</div><!-- <div class="col-md-4 col-lg-3">
+							<p style="position: relative;"><input type="text" name="description" t-att-value="description" id="description" class="form-control"
+							required="required"/></p> -->
+
+					<div class="col-md-4 col-lg-2"><input type="number" name="life_relief" value="0" min="0" onkeyup="validateNumber()" onclick="validateNumber()" onchange="validateNumber()" step="any" id="life_relief" class="form-control" autofocus="autofocus" autocapitalize="off"/>
+					</div>
+					</div>
+					<div class="row"><div class="col-md-4 col-lg-3"><label for="nhf_contributions" class="control-label"><p style="position: relative;  left: 100px;  padding-left: 2cm;">NHF Contributions</p></label>
+					</div>
+						<div class="col-md-4 col-lg-2"><input type="number" name="nhf_contributions" onkeyup="validateNumber()" onclick="validateNumber()" onchange="validateNumber()" min="0" step="any" value="0" id="nhf_contributions" class="form-control" autofocus="autofocus" autocapitalize="off"/>
+						</div>
+						<div class="col-md-4 col-lg-3"><label for="capital_allowances" class="control-label"><p style="position: relative;  left: 100px;  padding-left: 2cm;">Capital Allowances</p></label>
+						</div>
+						<div class="col-md-4 col-lg-2"><input type="number" name="capital_allowances" min="0" onkeyup="validateNumber()" onclick="validateNumber()" onchange="validateNumber()" value="0" step="any" id="capital_allowances" class="form-control" autofocus="autofocus" autocapitalize="off"/>
+						</div>
+					</div>
+					<div class="row"><div class="col-md-4 col-lg-3"><label for="ins_superannuations" class="control-label"><p style="position: relative;  left: 100px;  padding-left: 2cm;">INS Superannuations</p></label>
+					</div>
+						<div class="col-md-4 col-lg-2"><input type="number" name="ins_superannuations" min="0" onkeyup="validateNumber()" onclick="validateNumber()" onchange="validateNumber()" step="any" value="0" id="ins_superannuations" class="form-control" autofocus="autofocus" autocapitalize="off"/>
+						</div>
+						<div class="col-md-4 col-lg-3"><label for="balancing_charges" class="control-label"><p style="position: relative;  left: 100px;  padding-left: 2cm;">Balancing Charges</p></label>
+						</div>
+						<div class="col-md-4 col-lg-2"><input type="number" name="balancing_charges" value="0" onkeyup="validateNumber()" onclick="validateNumber()" onchange="validateNumber()" min="0" step="any" id="balancing_charges" class="form-control" autofocus="autofocus" autocapitalize="off"/>
+						</div>
+					</div>
+					<div class="row"><div class="col-md-4 col-lg-3"><label for="nhis_contributions" class="control-label"><p style="position: relative;  left: 100px;  padding-left: 2cm;">NHIS Contributions</p></label>
+					</div>
+						<div class="col-md-4 col-lg-2"><input type="number" name="nhis_contributions" value="0" onkeyup="validateNumber()" onclick="validateNumber()" onchange="validateNumber()" min="0" step="any" id="nhis_contributions" class="form-control" autofocus="autofocus" autocapitalize="off"/>
+						</div>
+						<div class="col-md-4 col-lg-3"><label for="balancing_allowaces" class="control-label"><p style="position: relative;  left: 100px;  padding-left: 2cm;">Balancing Allowaces</p></label>
+						</div>
+						<div class="col-md-4 col-lg-2"><input type="number" name="balancing_allowaces" value="0" min="0" onkeyup="validateNumber()" onclick="validateNumber()" onchange="validateNumber()" step="any" id="balancing_allowaces" class="form-control" autofocus="autofocus" autocapitalize="off"/>
+						</div>
+					</div>
+					<div class="row"><div class="col-md-4 col-lg-3"><label for="mortgage_interest" class="control-label"><p style="position: relative;  left: 100px;  padding-left: 2cm;">Mortgage Interest </p></label>
+					</div>
+						<div class="col-md-4 col-lg-2"><input type="number" name="mortgage_interest" min="0" onkeyup="validateNumber()" onclick="validateNumber()" onchange="validateNumber()" value="0" step="any" id="mortgage_interest" class="form-control" autofocus="autofocus" autocapitalize="off"/>
+						</div>
+						<div class="col-md-4 col-lg-3"><label for="losses" class="control-label"><p style="position: relative;  left: 100px;  padding-left: 2cm;">Losses</p></label>
+						</div>
+						<div class="col-md-4 col-lg-2"><input type="number" name="losses" min="0" value="0" onkeyup="validateNumber()" onclick="validateNumber()" onchange="validateNumber()" id="losses" step="any" class="form-control" autofocus="autofocus" autocapitalize="off"/>
+						</div>
+					</div>
+
+					<div class="col-md-2">
+					<div class="col-md-8 text-center mb16">
+					<input class="btn btn-default btn-primary" style="position: relative;  left: 150px;" name="total"  value="Total" id="total" type="button"/>
+					</div>
+					</div>
+                    <h3>
+						<div class="row">
+							<div class="col-md-12 text-left mb16">
+								<h2><p style="color:#104A5A; position: relative;  left: 50px;">Tax Summary</p></h2>
+							</div>
+						</div>
+					</h3>
+
+                        <div class="row">
+						<div class="col-md-4 col-lg-3">
+							<label for="total_amt" class="control-label"><p style="position: relative;  left: 100px;  padding-left: 2cm;">Total Amount</p></label>
+						</div>
+						<div class="col-md-4 col-lg-2">
+							<input type="number" name="total_amt" value="0" id="total_amt" min="0" class="form-control"  readonly="1" autofocus="autofocus"
+							autocapitalize="off"/>
+						</div>
+						<div t-attf-class=" col-md-4 col-lg-3">
+							<label class="control-label" for="tax_liability"><p style="position: relative;  left: 100px; padding-left: 2cm;">Tax Liability</p></label>
+						</div>
+						<div class="col-md-4 col-lg-2">
+							<input type="number" name="tax_liability" value="0" id="tax_liability" min="0" class="form-control"  readonly="1" autofocus="autofocus"
+							autocapitalize="off" />
+						</div>
+
+					</div>
+					<div class="row">
+						<div class="col-md-4 col-lg-3">
+							<label for="consolidated" class="control-label"><p style="position: relative;  left: 100px;  padding-left: 2cm;">Consolidated Relief</p></label>
+						</div>
+						<div class="col-md-4 col-lg-2">
+							<input type="number" name="consolidated" value="0" id="consolidated" min="0" class="form-control" readonly="1" autofocus="autofocus"
+							autocapitalize="off"/>
+						</div>
+						<div class="col-md-4 col-lg-3">
+							<label for="total_relief" class="control-label"><p style="position: relative;  left: 100px; padding-left: 2cm;">Total Relief</p></label>
+						</div>
+						<!-- <div class="col-md-4 col-lg-3">
+							<p style="position: relative;"><input type="text" name="description" t-att-value="description" id="description" class="form-control"
+							required="required"/></p> -->
+							<div class="col-md-4 col-lg-2">
+							<input type="number" name="total_relief" value="0" id="total_relief" min="0" class="form-control" readonly="1" autofocus="autofocus"
+							autocapitalize="off"/>
+						</div>
+					</div>
+                    <div class="row">
+						<div class="col-md-4 col-lg-3">
+							<label for="next_taxable_inc" class="control-label"><p style="position: relative;  left: 100px;  padding-left: 2cm;">Next Taxable Income</p></label>
+						</div>
+						<div class="col-md-4 col-lg-2">
+							<input type="number"  name="next_taxable_inc" value="0" min="0" id="next_taxable_inc" class="form-control" readonly="1" autofocus="autofocus"
+							autocapitalize="off"/>
+						</div>
+                    </div>
+
+
+
+				</td>
+
+			</tr>
+		</table>
+
+
+
+	</form>
+		<div class="oe_structure"/>
+
+	</t>
+</template>
+		<template id="create_etax_record" name="Enablers">
+			<t t-call="website.layout">
+				<div id="wrap">
+					<div class="oe_structure"/>
+					<div class="container">
+						<div class="row">
+							<div class="col-md-8">
+								<div class="alert alert-success">
+									Record Created successfully.....
+									<button type="button" class="close" data-dismiss="alert">&amp;times;</button>
+								</div>
+								<div class="col-md-4 col-lg-3" style="position: relative;  left: 100px; padding-left: 2cm;">
+									<a href="/my/issues" class="btn btn-default btn-primary mb32" >Submit</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="oe_structure"/>
+				</div>
+			</t>
+</template>
+
+
+    </data>
+</openerp>

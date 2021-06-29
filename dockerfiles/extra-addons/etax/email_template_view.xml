@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+        <record id="send_mail_tax_calculator" model="email.template">
+            <field name="name">Tax Calculation Individual</field>
+            <field name="subject">Tax Calculation Individual</field>
+            <field name="model_id" ref="etax.model_tax_calculator_individual"/>
+            <field name="email_to" >${object.name.email|safe}</field>
+            <field name="lang">${object.name.lang}</field>
+            <field name="body_html"><![CDATA[
+            <p>Hi ${object.name and object.name.name}</p>
+            <p>Below is the tax calculation details</p>
+            <p>Total Amount- ${object.total_amount or 0.0}</p>
+            <p>Tax Liability-${object.tax_liability or 0.0}</p>
+            <p>Consolidated Relief- ${object.consolidated_relief_one or 0.0}</p>
+            <p>Total Relief-${object.total_relief or 0.0}</p>
+            <p>Net Taxable Income-${object.net_taxable_income or 0.0}</p>
+
+            ]]></field>
+        </record>
+
+        <record id="send_mail_tax_cotrporate_calculator" model="email.template">
+            <field name="name">Tax Calculation Corporate</field>
+            <field name="subject">Tax Calculation Corporate</field>
+            <field name="model_id" ref="etax.model_tax_calculator_corporate"/>
+            <field name="email_to" >${object.name.email|safe}</field>
+            <field name="lang">${object.name.lang}</field>
+            <field name="body_html"><![CDATA[
+            <p>Hi ${object.name and object.name.name}</p>
+            <p>Below is the tax calculation details</p>
+            <p>Total Amount- ${object.total_amount or 0.0}</p>
+            <p>Tax Liability-${object.tax_liability or 0.0}</p>
+            <p>Consolidated Relief- ${object.consolidated_relief_one or 0.0}</p>
+            <p>Total Relief-${object.total_relief or 0.0}</p>
+            <p>Net Taxable Income-${object.net_taxable_income or 0.0}</p>
+
+            ]]></field>
+        </record>
+
+
+    </data>
+</openerp>

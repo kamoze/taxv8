@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- vim:fdn=3:
+-->
+<openerp>
+    <data>
+
+        <!--<template id="signup" inherit_id="auth_signup.fields" name="Auth Signup/ResetPassword form fields">-->
+
+            <!--<div class="form-group field-confirm_password" position="after">-->
+                <!--<div class="form-group field-name">-->
+                    <!--<label for="login_type" class="control-label">Login As</label>-->
+                    <!--<select name="login_type" id="ctype" size="1" class="form-control" placeholder="Please Select One">-->
+                        <!--<option value="individual" class="form-control">Individual</option>-->
+                        <!--<option value="corporate" class="form-control">Corporate</option>-->
+                    <!--</select>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</template>-->
+
+
+    </data>
+</openerp>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+    
+        <menuitem name="Accounting"
+            id="account.menu_finance"
+            groups="base.group_user,account.group_account_user,account.group_account_manager,account.group_account_invoice,openeducat_erp.group_op_student"
+            sequence="50"/>
+
+        <menuitem action="account.action_invoice_tree1" 
+                  id="account.menu_action_invoice_tree1" 
+                  parent="account.menu_finance_receivables" 
+                  groups="base.group_user,openeducat_erp.group_op_student"/>
+        
+        <menuitem action="account_voucher.action_vendor_receipt" sequence="12"
+	               id="account_voucher.menu_action_vendor_receipt"  
+		           parent="account.menu_finance_receivables" 
+		           groups="base.group_user,openeducat_erp.group_op_student"/>
+        
+        <menuitem id="account.menu_finance_receivables"  name="Customers" parent="account.menu_finance" sequence="2"  groups="base.group_user,openeducat_erp.group_op_student"/>
+
+
+
+        <!-- Inherit Account Invoice search view  -->
+        <!--<record model="ir.ui.view" id="account_invoice_student_search">-->
+            <!--<field name="name">account.invoice.student.search</field>-->
+            <!--<field name="model">account.invoice</field>-->
+            <!--<field name="inherit_id" ref="account.view_account_invoice_filter"/>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<xpath expr="//field[@name='period_id']" position="after">-->
+                    <!--<field name="stud_matric_number" string="Matric Number"/>-->
+                    <!--<field name="couese_id" string="Course"/>-->
+                    <!--<field name="entry_session_id" string="Session"/>-->
+                    <!--<field name="semester_id" string="Semester"/>-->
+                <!--</xpath>-->
+            <!--</field>-->
+        <!--</record>-->
+
+
+        <!-- Inherit Search for Account Voucher  -->
+       view_voucher_tree_custom-->
+
+
+         <!-- Inherit Tree View for Account Voucher  -->
+        <!--<record model="ir.ui.view" id="view_voucher_tree_custom">-->
+            <!--<field name="name">account.voucher</field>-->
+            <!--<field name="model">account.voucher</field>-->
+            <!--<field name="inherit_id" ref="account_voucher.view_voucher_tree"/>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<xpath expr="//field[@name='partner_id']" position="after">-->
+                    <!--<field name="stud_matric_number"/>-->
+                    <!--<field name="couese_id"/>-->
+                    <!--<field name="entry_session_id"/>-->
+                    <!--<field name="semester_id"/>-->
+                <!--</xpath>-->
+            <!--</field>-->
+        <!--</record>-->
+ <!--<record model="ir.ui.view" id="view_voucher_tree_custom">-->
+            <!--<field name="name">account.voucher</field>-->
+            <!--<field name="model">account.voucher</field>-->
+            <!--<field name="inherit_id" ref="account_voucher.view_voucher_tree"/>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<xpath expr="//field[@name='partner_id']" position="after">-->
+                    <!--<field name="stud_matric_number"/>-->
+                    <!--<field name="couese_id"/>-->
+                    <!--<field name="entry_session_id"/>-->
+                    <!--<field name="semester_id"/>-->
+                <!--</xpath>-->
+            <!--</field>-->
+        <!--</record>-->
+
+
+        <!-- Inherit Tree View for Account Invoice  -->
+        <!--<record model="ir.ui.view" id="invoice_tree_custom">-->
+            <!--<field name="name">account.invoice.custom</field>-->
+            <!--<field name="model">account.invoice</field>-->
+            <!--<field name="inherit_id" ref="account.invoice_tree"/>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<xpath expr="//field[@name='partner_id']" position="after">-->
+                    <!--<field name="stud_matric_number"/>-->
+                    <!--<field name="couese_id"/>-->
+                    <!--<field name="entry_session_id"/>-->
+                    <!--<field name="semester_id"/>-->
+                <!--</xpath>-->
+            <!--</field>-->
+        <!--</record>-->
+
+
+
+
+
+    </data>
+</openerp>

@@ -1,0 +1,602 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="view_partner_application_form_tree" model="ir.ui.view">
+            <field name="name">view.partner.application.form.tree.view</field>
+            <field name="model">partner.application.form</field>
+            <field name="arch" type="xml">
+                <tree string="Application">
+                    <field name="number" string="Application Number"/>
+                     <field name="bvn" />
+                    <field name="driver_license"/>
+                    <field name="national_id"/>
+                    <field name="name" />
+                    <field name="last_name" />
+                    <field name="city" />
+                    <field name="email" />
+                    <field name="tin" />
+                    <field name="bvn" />
+                    <field name="license_no" />
+                    <field name="national_id" />
+                     <field name="approve_state" />
+                </tree>
+            </field>
+        </record>
+
+        <menuitem action="hr.open_view_employee_list_my" id="hr.menu_open_view_employee_list_my" sequence="3" parent="hr.menu_hr_main" groups="base.group_hr_user"/>
+
+        <!--application form -->
+        <record id="view_partner_application_form_form" model="ir.ui.view">
+            <field name="name">partner.application.form.form</field>
+            <field name="model">partner.application.form</field>
+
+            <field eval="1" name="priority" />
+            <field name="arch" type="xml">
+                <form string="Partners" >
+                    <header>
+                        <button name="action_application_submit" string="Submit" type="object" class="oe_highlight" attrs="{'invisible':[('approve_state','in',('review','approve','rejected'))]}" />
+                        <button name="action_application_approve" string="Approve" class="oe_highlight"
+                            type="object" attrs="{'invisible':[('approve_state','in',('new','approve','rejected'))]}" groups="etax.group_etax_manager"/>
+
+                        <!--<button name="action_application_approve" string="Approve" class="oe_highlight"-->
+                            <!--type="object" attrs="{'invisible':[('approve_state','in',('new','approve'))]}" groups="etax.group_etax_manager"/>-->
+                        <button name="button_reject" string="Reject" type="object"
+                                attrs="{'invisible':[('approve_state','in',('new','approve','rejected'))]}"
+                                class="oe_highlight" groups="etax.group_etax_manager"/>
+
+                        <button name="action_application_reject" string="Return To Draft" type="object" attrs="{'invisible':[('approve_state','in',('new','approve'))]}" class="oe_highlight" groups="etax.group_etax_manager"/>
+
+                        <field name="approve_state" widget="statusbar" nolabel="1" statusbar_visible="new,review,approve,rejected" class="oe_link oe_right" />
+                    </header>
+                    <sheet>
+                        <h1>
+                            <field name="number" readonly="1" />
+                        </h1>
+                        <field name="image" widget='image' class="oe_left oe_avatar"
+                            options='{"preview_image": "image_medium", "size": [650, 650]}' />
+                        <label for="name" />
+                        (
+                        <field name="is_company"
+                            class="oe_inline" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                        <label for="is_company" string="Is a Company?" />
+                        )
+                        <h1>
+                            <field name="name" default_focus="1" placeholder="Name"
+                                style="width:40%%" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                        </h1>
+                        <div class="oe_title">
+                            <div class="oe_edit_only">
+                            </div>
+                            <group col='4' >
+                                <field name="last_name" placeholder="Last Name" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                <field name="other_name" placeholder="Other Name" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                <field name="date_of_birth" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                <field name="sex" required="1" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                <field name="marital_state" required="1" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                <field name="user_id" required="1" string="User" readonly="1"/>
+                                <field name="parent_id" placeholder="Company"
+                                    domain="[('is_company', '=', True)]"
+                                    context="{'default_is_company': True, 'default_supplier': supplier, 'default_customer': customer}"
+                                    attrs="{'invisible': [('is_company','=', True),('parent_id', '=', False)], 'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                <field name="category_id" widget="many2many_tags"
+                                    placeholder="Tags..." attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                            </group>
+                        </div>
+                        <group>
+                            <group>
+                                <label for="type" attrs="{'invisible': [('parent_id','=', False)]}" />
+                                <div attrs="{'invisible': [('parent_id','=', False)]}" name="div_type">
+                                    <field class="oe_inline" name="type" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                </div>
+
+                                <label for="street" string="Residance Address" />
+                                <div>
+
+                                    <field name="street" placeholder="Street..." attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" required="1" />
+                                    <field name="street2" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}"/>
+                                    <div class="address_format">
+                                        <field name="city" placeholder="City" style="width: 40%%"
+                                               attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" required="1"/>
+                                        <field name="state_id" class="oe_no_button" placeholder="State"
+                                            style="width: 37%%" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" required="1" />
+                                        <field name="zip" placeholder="ZIP" style="width: 20%%" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}"
+                                        required="1"/>
+                                    </div>
+                                    <field name="country_id" placeholder="Country" class="oe_no_button"
+                                        options='{"no_open": True}' attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}"
+                                    required="1"/>
+                                </div>
+                                <field name="phone" placeholder="e.g. +32.81.81.37.00" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}"/>
+                                <field name="mobile" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                <field name="email" widget="email" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                <field name="website" widget="url" placeholder="e.g. www.openerp.com" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                <field name="tax_config_id" invisible="1"/>
+                                <field name="tax_office_id" groups="etax.group_etax_manager" widget="selection"/>
+
+                                <field name="application_type" required="1" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                <field name="is_approve" invisible="1" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                <field name="generate_tin" attrs="{'invisible':True}" />
+                                <field name="tin" attrs="{'invisible':[('generate_tin','=',False)], 'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                <field name="select_tin" attrs="{'invisible':True}" />
+                                <field name="id" invisible="1" />
+                                <field name="res_ptnr_id" class="oe_inline" readonly="1" attrs="{'invisible': [('id', '=', False)], 'required': [('id', '!=', False)], 'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                <field name="bvn" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}"/>
+                                <field name="driver_license" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}"/>
+                                <field name="national_id" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}"/>
+
+                            </group>
+                            <group>
+                                <label for="street" string="Business Address" />
+                                <div>
+                                    <field name="office_street" placeholder="Street..." attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}"/>
+                                    <field name="office_street2" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                    <div class="address_format">
+                                        <field name="office_city" placeholder="City" style="width: 40%%" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                        <field name="office_state_id" class="oe_no_button" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}"
+                                            placeholder="State" style="width: 37%%" options='{"no_open": True}'
+                                         />
+                                        <field name="office_zip" placeholder="ZIP" style="width: 20%%" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                    </div>
+                                    <field name="office_country_id" placeholder="Country"
+                                        class="oe_no_button" options='{"no_open": True}' attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                </div>
+                                <field name="function" placeholder="e.g. Sales Director"
+                                    attrs="{'invisible': [('is_company','=', True)], 'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                <field name="office_phone" placeholder="e.g. +32.81.81.37.00" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                <field name="office_mobile" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                <field name="fax" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                <field name="rs_ur_id" invisible="1"/>
+                                <field name="title" domain="[('domain', '=', 'contact')]}"
+                                    options='{"no_open": True}' attrs="{'invisible': [('is_company','=', True)], 'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                            </group>
+                        </group>
+                        <notebook colspan="4">
+                            <page string="Business Details" autofocus="autofocus">
+                                <group>
+                                    <group>
+                                        <field name="origin_state_id" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                        <field name="local_govt_city" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                        <field name="trade_name" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                    </group>
+                                    <group>
+                                        <field name="self_employed_business" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                        <field name="business_names" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                        <!--<field name="local_govt_city" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />-->
+                                    </group>
+                                </group>
+                                <group>
+                                    <h4>
+                                        <label
+                                            string="Did you receive income from Nigerian properties including land in the current tax year?
+"
+                                            colspan="2" />
+                                    </h4>
+                                    <field name="property_income_receive" nolabel="1"
+                                        style="width:10%%" required="1" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+
+                                    <h4>
+                                        <label
+                                            string="Did you dispose of any chargeable assets within the current tax year?
+"
+                                            colspan="2" />
+                                    </h4>
+                                    <field name="dispose_of_chargeable_assets" nolabel="1"
+                                        style="width:10%%" required="1" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                    <h4>
+                                        <label
+                                            string="Did you receive any Interests from any Nigerian banks, building Societies, and Trusts?
+"
+                                            colspan="2" />
+                                    </h4>
+                                    <field name="interest_income_receive" nolabel="1"
+                                        style="width:10%%" required="1" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                    <h4>
+                                        <label
+                                            string="Did you receive any Dividends within the current tax Year?
+"
+                                            colspan="2" />
+                                    </h4>
+                                    <field name="dividend_income_receive" nolabel="1"
+                                        style="width:10%%" required="1" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                    <h4>
+                                        <label string="Was you income over N300,000 ?
+" colspan="2" />
+                                    </h4>
+                                    <field name="over_income_receive" nolabel="1" style="width:10%%"
+                                        required="1" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                    <h4>
+                                        <label
+                                            string="Did you receive any Nigerian Pensions, Annuities, or State Benefits, for example, State Pension, Occupational Pension, Retirement Annuity, Disability Benefits ?
+"
+                                            colspan="2" />
+                                    </h4>
+                                    <field name="pasb_income_receive" nolabel="1" style="width:10%%"
+                                        required="1" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                                </group>
+                                <label for="reject"  attrs="{'invisible': [('approve_state','in', ['new','approve','rejected'])]}"/>
+                                <field name="reject"  attrs="{'invisible': [('approve_state','in', ['new','approve','rejected'])]}"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+									<field name="message_follower_ids" widget="mail_followers"/>
+									<field name="message_ids" widget="mail_thread"/>
+							</div>
+                </form>
+            </field>
+        </record>
+
+
+
+       <!--<record id="view_partner_application_form_form_inherit" model="ir.ui.view">-->
+            <!--<field name="name">partner.application.form.form</field>-->
+            <!--<field name="model">partner.application.form</field>-->
+            <!--<field name="inherit_id" ref="application.view_partner_application_form_form" />-->
+
+            <!--<field name="groups_id" eval="[(4, [ref('base.group_etax_officer')])]" />-->
+
+            <!--&lt;!&ndash;<field name="groups_id" eval="[(4, [ref('base.group_etax_officer')])]" />&ndash;&gt;-->
+
+             <!--<field name="arch" type="xml">-->
+                 <!--<xpath expr="//form" position="replace">-->
+                <!--<form string="Partners" >-->
+                    <!--<header>-->
+                        <!--<button name="action_application_submit" string="Submit" type="object" class="oe_highlight" attrs="{'invisible':[('approve_state','in',('review','approve','rejected'))]}" />-->
+                        <!--<button name="action_application_approve" string="Approve" class="oe_highlight"-->
+                            <!--type="object" attrs="{'invisible':[('approve_state','in',('new','approve','rejected'))]}" groups="etax.group_etax_manager"/>-->
+
+                        <!--&lt;!&ndash;<button name="action_application_approve" string="Approve" class="oe_highlight"&ndash;&gt;-->
+                            <!--&lt;!&ndash;type="object" attrs="{'invisible':[('approve_state','in',('new','approve'))]}" groups="etax.group_etax_manager"/>&ndash;&gt;-->
+                        <!--<button name="button_reject" string="Reject" type="object"-->
+                                <!--attrs="{'invisible':[('approve_state','in',('new','approve','rejected'))]}"-->
+                                <!--class="oe_highlight" groups="etax.group_etax_manager"/>-->
+
+                        <!--<button name="action_application_reject" string="Return To Draft" type="object" attrs="{'invisible':[('approve_state','in',('new','approve'))]}" class="oe_highlight" groups="etax.group_etax_manager"/>-->
+
+                        <!--<field name="approve_state" widget="statusbar" nolabel="1" statusbar_visible="new,review,approve,rejected" class="oe_link oe_right" />-->
+                    <!--</header>-->
+                    <!--<sheet>-->
+                        <!--<h1>-->
+                            <!--<field name="number" readonly="1" />-->
+                        <!--</h1>-->
+                        <!--<field name="image" widget='image' class="oe_left oe_avatar"-->
+                            <!--options='{"preview_image": "image_medium", "size": [650, 650]}' />-->
+                        <!--<label for="name" />-->
+                        <!--(-->
+                        <!--<field name="is_company"-->
+                            <!--class="oe_inline"  />-->
+                        <!--<label for="is_company" string="Is a Company?" />-->
+                        <!--)-->
+                        <!--<h1>-->
+                            <!--<field name="name" default_focus="1" placeholder="Name"-->
+                                <!--style="width:40%%"  />-->
+                        <!--</h1>-->
+                        <!--<div class="oe_title">-->
+                            <!--<div class="oe_edit_only">-->
+                            <!--</div>-->
+                            <!--<group col='4' >-->
+                                <!--<field name="last_name" placeholder="Last Name" />-->
+                                <!--<field name="other_name" placeholder="Other Name" />-->
+                                <!--<field name="date_of_birth"  />-->
+                                <!--<field name="sex" required="1" />-->
+                                <!--<field name="marital_state" required="1" />-->
+                                <!--<field name="user_id" required="1" string="User" readonly="1"/>-->
+                                <!--<field name="parent_id" placeholder="Company"-->
+                                    <!--domain="[('is_company', '=', True)]"-->
+                                    <!--context="{'default_is_company': True, 'default_supplier': supplier, 'default_customer': customer}"-->
+                                    <!--attrs="{'invisible': [('is_company','=', True),('parent_id', '=', False)], 'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />-->
+                                <!--<field name="category_id" widget="many2many_tags"-->
+                                    <!--placeholder="Tags..."  />-->
+                            <!--</group>-->
+                        <!--</div>-->
+                        <!--<group>-->
+                            <!--<group>-->
+                                <!--<label for="type" attrs="{'invisible': [('parent_id','=', False)]}" />-->
+                                <!--<div attrs="{'invisible': [('parent_id','=', False)]}" name="div_type">-->
+                                    <!--<field class="oe_inline" name="type"  />-->
+                                <!--</div>-->
+
+                                <!--<label for="street" string="Residance Address" />-->
+                                <!--<div>-->
+
+                                    <!--<field name="street" placeholder="Street..."  required="1" />-->
+                                    <!--<field name="street2" />-->
+                                    <!--<div class="address_format">-->
+                                        <!--<field name="city" placeholder="City" style="width: 40%%"-->
+                                                <!--required="1"/>-->
+                                        <!--<field name="state_id" class="oe_no_button" placeholder="State"-->
+                                            <!--style="width: 37%%"  required="1" />-->
+                                        <!--<field name="zip" placeholder="ZIP" style="width: 20%%"-->
+                                        <!--required="1"/>-->
+                                    <!--</div>-->
+                                    <!--<field name="country_id" placeholder="Country" class="oe_no_button"-->
+                                        <!--options='{"no_open": True}'-->
+                                    <!--required="1"/>-->
+                                <!--</div>-->
+                                <!--<field name="phone" placeholder="e.g. +32.81.81.37.00" />-->
+                                <!--<field name="mobile"  />-->
+                                <!--<field name="email" widget="email"  />-->
+                                <!--<field name="website" widget="url" placeholder="e.g. www.openerp.com"  />-->
+                                <!--<field name="tax_config_id" invisible="1"/>-->
+                                <!--<field name="tax_office_id" groups="etax.group_etax_manager" widget="selection"/>-->
+
+                                <!--<field name="application_type" required="1"  />-->
+                                <!--<field name="is_approve" invisible="1"  />-->
+                                <!--<field name="generate_tin" attrs="{'invisible':True}" />-->
+                                <!--<field name="tin" attrs="{'invisible':[('generate_tin','=',False)]}" />-->
+                                <!--<field name="select_tin" attrs="{'invisible':True}" />-->
+                                <!--<field name="id" invisible="1" />-->
+                                <!--<field name="res_ptnr_id" class="oe_inline" readonly="1" attrs="{'invisible': [('id', '=', False)], 'required': [('id', '!=', False)]}" />-->
+
+                                <!--<field name="bvn" />-->
+                                <!--<field name="driver_license"/>-->
+                                <!--<field name="national_id"/>-->
+
+                            <!--</group>-->
+                            <!--<group>-->
+                                <!--<label for="street" string="Business Address" />-->
+                                <!--<div>-->
+                                    <!--<field name="office_street" placeholder="Street..." />-->
+                                    <!--<field name="office_street2"  />-->
+                                    <!--<div class="address_format">-->
+                                        <!--<field name="office_city" placeholder="City" style="width: 40%%"  />-->
+                                        <!--<field name="office_state_id" class="oe_no_button"-->
+                                            <!--placeholder="State" style="width: 37%%" options='{"no_open": True}'-->
+                                         <!--/>-->
+                                        <!--<field name="office_zip" placeholder="ZIP" style="width: 20%%"  />-->
+                                    <!--</div>-->
+                                    <!--<field name="office_country_id" placeholder="Country"-->
+                                        <!--class="oe_no_button" options='{"no_open": True}'  />-->
+                                <!--</div>-->
+                                <!--<field name="function" placeholder="e.g. Sales Director"-->
+                                    <!--attrs="{'invisible': [('is_company','=', True)], 'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />-->
+                                <!--<field name="office_phone" placeholder="e.g. +32.81.81.37.00"  />-->
+                                <!--<field name="office_mobile"  />-->
+                                <!--<field name="fax"  />-->
+                                <!--<field name="rs_ur_id" invisible="1"/>-->
+                                <!--<field name="title" domain="[('domain', '=', 'contact')]}"-->
+                                    <!--options='{"no_open": True}' attrs="{'invisible': [('is_company','=', True)], 'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />-->
+                            <!--</group>-->
+                        <!--</group>-->
+                        <!--<notebook colspan="4">-->
+                            <!--<page string="Business Details" autofocus="autofocus">-->
+                                <!--<group>-->
+                                    <!--<group>-->
+                                        <!--<field name="origin_state_id"  />-->
+                                        <!--<field name="local_govt_city"  />-->
+                                        <!--<field name="trade_name"  />-->
+                                    <!--</group>-->
+                                    <!--<group>-->
+                                        <!--<field name="self_employed_business"  />-->
+                                        <!--<field name="business_names"  />-->
+                                        <!--&lt;!&ndash;<field name="local_govt_city"  />&ndash;&gt;-->
+                                    <!--</group>-->
+                                <!--</group>-->
+                                <!--<group>-->
+                                    <!--<h4>-->
+                                        <!--<label-->
+                                            <!--string="Did you receive income from Nigerian properties including land in the current tax year?-->
+<!--"-->
+                                            <!--colspan="2" />-->
+                                    <!--</h4>-->
+                                    <!--<field name="property_income_receive" nolabel="1"-->
+                                        <!--style="width:10%%" required="1"  />-->
+
+                                    <!--<h4>-->
+                                        <!--<label-->
+                                            <!--string="Did you dispose of any chargeable assets within the current tax year?-->
+<!--"-->
+                                            <!--colspan="2" />-->
+                                    <!--</h4>-->
+                                    <!--<field name="dispose_of_chargeable_assets" nolabel="1"-->
+                                        <!--style="width:10%%" required="1"  />-->
+                                    <!--<h4>-->
+                                        <!--<label-->
+                                            <!--string="Did you receive any Interests from any Nigerian banks, building Societies, and Trusts?-->
+<!--"-->
+                                            <!--colspan="2" />-->
+                                    <!--</h4>-->
+                                    <!--<field name="interest_income_receive" nolabel="1"-->
+                                        <!--style="width:10%%" required="1"  />-->
+                                    <!--<h4>-->
+                                        <!--<label-->
+                                            <!--string="Did you receive any Dividends within the current tax Year?-->
+<!--"-->
+                                            <!--colspan="2" />-->
+                                    <!--</h4>-->
+                                    <!--<field name="dividend_income_receive" nolabel="1"-->
+                                        <!--style="width:10%%" required="1"  />-->
+                                    <!--<h4>-->
+                                        <!--<label string="Was you income over N300,000 ?-->
+<!--" colspan="2" />-->
+                                    <!--</h4>-->
+                                    <!--<field name="over_income_receive" nolabel="1" style="width:10%%"-->
+                                        <!--required="1"  />-->
+                                    <!--<h4>-->
+                                        <!--<label-->
+                                            <!--string="Did you receive any Nigerian Pensions, Annuities, or State Benefits, for example, State Pension, Occupational Pension, Retirement Annuity, Disability Benefits ?-->
+<!--"-->
+                                            <!--colspan="2" />-->
+                                    <!--</h4>-->
+                                    <!--<field name="pasb_income_receive" nolabel="1" style="width:10%%"-->
+                                        <!--required="1"  />-->
+                                <!--</group>-->
+                                <!--<label for="reject"  attrs="{'invisible': [('approve_state','in', ['new','approve','rejected'])]}"/>-->
+                                <!--<field name="reject"  attrs="{'invisible': [('approve_state','in', ['new','approve','rejected'])]}"/>-->
+                            <!--</page>-->
+                        <!--</notebook>-->
+                    <!--</sheet>-->
+                    <!--<div class="oe_chatter">-->
+									<!--<field name="message_follower_ids" widget="mail_followers"/>-->
+									<!--<field name="message_ids" widget="mail_thread"/>-->
+							<!--</div>-->
+                <!--</form>-->
+                 <!--</xpath>-->
+            <!--</field>-->
+        <!--</record>-->
+
+        <!--
+        <record id="portal_appointment_tree_spec" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="action_application_form_menu" />
+            <field name="view_id" ref="view_application_menu_tree" />
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="1" />
+        </record>
+
+        <record id="portal_appointment_form_spec" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="action_application_form_menu" />
+            <field name="view_id" ref="view_application_form_menu" />
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="2" />
+        </record>
+        -->
+        <record model="ir.ui.view" id="res_partner_application_kanban_view">
+            <field name="name">partner.application.kanban</field>
+            <field name="model">partner.application.form</field>
+            <field name="arch" type="xml">
+                <kanban >
+                    <field name="color"/>
+                    <field name="display_name"/>
+                    <field name="title"/>
+                    <field name="email"/>
+                    <field name="parent_id"/>
+                    <field name="is_company"/>
+                    <field name="function"/>
+                    <field name="phone"/>
+                    <field name="street"/>
+                    <field name="street2"/>
+                    <field name="zip"/>
+                    <field name="city"/>
+                    <field name="country_id"/>
+                    <field name="mobile"/>
+                    <field name="state_id"/>
+                    <field name="category_id"/>
+                    <field name="has_image"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_vignette oe_semantic_html_override">
+                                <a type="open">
+                                    <t t-if="record.has_image.raw_value === true">
+                                        <img t-att-src="kanban_image('partner.application.form', 'image_small', record.id.value)" class="oe_kanban_image"/>
+                                    </t>
+                                    <t t-if="record.has_image.raw_value === false">
+                                        <t t-if="record.is_company.raw_value === true">
+                                            <img t-att-src='_s + "/base/static/src/img/company_image.png"' class="oe_kanban_image"/>
+                                        </t>
+                                        <t t-if="record.is_company.raw_value === false">
+                                            <img t-att-src='_s + "/base/static/src/img/avatar.png"' class="oe_kanban_image"/>
+                                        </t>
+                                    </t>
+                                </a>
+                                <div class="oe_kanban_details">
+                                    <h4 class="oe_partner_heading"><a type="open"><field name="display_name"/></a></h4>
+                                    <div class="oe_kanban_partner_categories"/>
+                                    <div class="oe_kanban_partner_links"/>
+                                    <ul>
+                                        <li t-if="record.application_type.raw_value"><a t-attf-href="mailto:#{record.application_type.raw_value}"><field name="application_type"/></a></li>
+                                        <li t-if="record.sex.raw_value"><a t-attf-href="mailto:#{record.sex.raw_value}"><field name="sex"/></a></li>
+                                        <li t-if="record.marital_state.raw_value"><a t-attf-href="mailto:#{record.marital_state.raw_value}"><field name="marital_state"/></a></li>
+                                        <li t-if="record.email.raw_value"><a t-attf-href="mailto:#{record.email.raw_value}"><field name="email"/></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+         <record id="account_voucher.view_invoice_customer" model="ir.ui.view">
+            <field name="name">account.invoice.customer.pay</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='invoice_open'][last()]" position="after">
+                    <button name="invoice_pay_customer" type="object" string="Register Payment"
+                        attrs="{'invisible': ['|', ('state','!=','open'), ('sent','=',True)]}" groups="etax.group_etax_manager"/>
+                    <button name="invoice_pay_customer" type="object" string="Register Payment"
+                        attrs="{'invisible': ['|', ('state','!=','open'), ('sent','=',False)]}" class="oe_highlight" groups="etax.group_etax_manager"/>
+                </xpath>
+                <xpath expr="//button[@name='%(account.action_account_invoice_refund)d']" position="replace">
+
+                    <button name="%(account.action_account_invoice_refund)d" type='action' string='Refund Invoice' states='open,proforma2,paid' groups="etax.group_etax_manager"/>
+                </xpath>
+                <xpath expr="//button[@name='action_invoice_sent']" position="replace">
+                    <button name="action_invoice_sent" type="object" string="Send by Email" attrs="{'invisible':['|',('sent','=',True), ('state', '!=', 'open')]}" class="oe_highlight" groups="etax.group_etax_manager"/>
+                </xpath>
+                <xpath expr="//button[@name='invoice_print']" position="replace">
+
+                <button name="invoice_print" string="Print" type="object" attrs="{'invisible':['|',('sent','=',True), ('state', '!=', 'open')]}" class="oe_highlight" groups="etax.group_etax_manager"/>
+                </xpath>
+            </field>
+        </record>
+
+
+
+        <record id="action_partner_application_form_menu" model="ir.actions.act_window">
+            <field name="name">Enrollment/Application Form</field>
+            <field name="res_model">partner.application.form</field>
+            <!-- <field name="domain">[('approve_state','!=','approve')]</field>-->
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+        <!-- process application tree and form view-->
+
+        <record id="action_partner_application_form_menu_process" model="ir.actions.act_window">
+            <field name="name">Enrollment/Application Form</field>
+            <field name="res_model">partner.application.form</field>
+            <field name="domain">[('approve_state','=','approve')]</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+        <record id="action_partner_application_form_menu_new_application" model="ir.actions.act_window">
+            <field name="name">Enrollment/Application Form</field>
+            <field name="res_model">partner.application.form</field>
+            <field name="domain">[('approve_state','in',('new','review'))]</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+
+
+        <menuitem id="menu_application_form_parent" name="Application" groups="etax.group_etax_tax_payer" />
+        <menuitem id="menu_application_form_sub" parent="menu_application_form_parent"
+            name="Application" groups="etax.group_etax_tax_payer"/>
+        <menuitem id="menu_action_application_form_action" parent="menu_application_form_sub"
+            action="action_partner_application_form_menu" groups="etax.group_etax_tax_payer" />
+
+
+        <menuitem id="firs_parent" name="FIRS" sequence="1" groups="base.group_firs"/>
+        <menuitem id="firs_sub_menu" parent="firs_parent"
+            name="FIRS"/>
+        <menuitem id="process_application"  name="Process Application"
+        action="action_partner_application_form_menu_process" parent="firs_sub_menu" sequence="2" groups="base.group_firs"/>
+
+        <menuitem id="new_application"  name="New Application"
+        action="action_partner_application_form_menu_new_application" parent="firs_sub_menu" sequence="1" groups="base.group_firs"/>
+
+
+        <menuitem id="nimc_parent" name="NIMC" sequence="2" groups="base.group_nimc"/>
+        <menuitem id="nime_sub_menu" parent="nimc_parent"
+            name="NIMC"/>
+        <menuitem id="process_application_nimc"  name="Process Application"
+        action="action_partner_application_form_menu_process" parent="nime_sub_menu" sequence="2" groups="base.group_nimc"/>
+
+        <menuitem id="new_application_nimc"  name="New Application"
+        action="action_partner_application_form_menu_new_application" parent="nime_sub_menu" sequence="1" groups="base.group_nimc"/>
+
+        <menuitem name="Messaging"
+          id="mail.mail_feeds_main"
+                  parent="base.menu_base_partner"
+          groups="base.group_user"
+          sequence="10"/>
+
+        <menuitem name="Reporting"
+            id="base.menu_reporting"
+                  parent="base.menu_base_partner"
+            groups="base.group_user"
+            sequence="170"/>
+
+    </data>
+</openerp>

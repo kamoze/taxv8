@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+     <record id="view_company_form_ean_inherited" model="ir.ui.view">
+        <field name="name">inherit.res.company.form</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@string='Configuration']" position="inside">
+                <group>
+                    <group name="ean_Prefix_setting" string="EAN Prefix">
+                        <field name="ean_prefix"/>
+                    </group>
+                </group>
+            </xpath>
+
+        </field>
+     </record>
+
+    </data>
+</openerp>

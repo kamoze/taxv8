@@ -1,0 +1,1152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Top Menu Item -->
+
+		<menuitem name="e-TAX" id="etax_top_menu" groups="base.group_tax_self_employed,group_etax_tax_payer"/>
+		<menuitem id="etax_tax_assessment_menu" parent="etax_top_menu" name="Tax Assessment" sequence="3"/>
+		
+		<!-- Create Profile View -->
+		<!-- Form View -->
+
+          <record model="ir.ui.view" id="base.res_partner_kanban_view">
+            <field name="name">res.partner.kanban</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <kanban create="false" edit="false">
+                    <field name="color"/>
+                    <field name="display_name"/>
+                    <field name="last_name"/>
+                    <field name="title"/>
+                    <field name="email"/>
+                    <field name="parent_id"/>
+                    <field name="is_company"/>
+                    <field name="function"/>
+                    <field name="phone"/>
+                    <field name="street"/>
+                    <field name="street2"/>
+                    <field name="zip"/>
+                    <field name="city"/>
+                    <field name="country_id"/>
+                    <field name="mobile"/>
+                    <field name="state_id"/>
+                    <field name="category_id"/>
+                    <field name="has_image"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_vignette oe_semantic_html_override">
+                                <a type="open">
+                                    <t t-if="record.has_image.raw_value === true">
+                                        <img t-att-src="kanban_image('res.partner', 'image_small', record.id.value)" class="oe_kanban_image"/>
+                                    </t>
+                                    <t t-if="record.has_image.raw_value === false">
+                                        <t t-if="record.is_company.raw_value === true">
+                                            <img t-att-src='_s + "/base/static/src/img/company_image.png"' class="oe_kanban_image"/>
+                                        </t>
+                                        <t t-if="record.is_company.raw_value === false">
+                                            <img t-att-src='_s + "/base/static/src/img/avatar.png"' class="oe_kanban_image"/>
+                                        </t>
+                                    </t>
+                                </a>
+                                <div class="oe_kanban_details">
+                                    <h4 class="oe_partner_heading"><a type="open"><field name="display_name"/></a><![CDATA[&nbsp; &nbsp;]]>  <field name="last_name"/></h4>
+                                    <div class="oe_kanban_partner_categories"/>
+                                    <div class="oe_kanban_partner_links"/>
+                                    <ul>
+                                        <li t-if="record.parent_id.raw_value and !record.function.raw_value"><field name="parent_id"/></li>
+                                        <li t-if="!record.parent_id.raw_value and record.function.raw_value"><field name="function"/></li>
+                                        <li t-if="record.parent_id.raw_value and record.function.raw_value"><field name="function"/> at <field name="parent_id"/></li>
+                                        <li t-if="record.city.raw_value and !record.country_id.raw_value"><field name="city"/></li>
+                                        <li t-if="!record.city.raw_value and record.country_id.raw_value"><field name="country_id"/></li>
+                                        <li t-if="record.city.raw_value and record.country_id.raw_value"><field name="city"/>, <field name="country_id"/></li>
+                                        <li t-if="record.email.raw_value"><a t-attf-href="mailto:#{record.email.raw_value}"><field name="email"/></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+		<record id="etax_profile_view" model="ir.ui.view">
+			<field name="name">res.partner.form</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_partner_form"/>
+			<field name="arch" type="xml">
+
+			   <xpath expr="//form[@string='Partners']/sheet" position="before">
+
+			       <header>
+			             <!-- <button name="approved" string="Approved" type="object" attrs="{'invisible':[('approve_state','=','approve')]}"/> -->
+
+<!--			             <xpath expr="//div[@name='buttons']" position="inside"-->
+    				 <button name="generate" string="Approve/Generate TIN" class="oe_highlight" type="object"
+
+                             attrs="{'invisible':['|',('select_tin','not in',('tinn','tin_menu')),
+    				 ('approve_state','!=','request')]}" groups="etax.group_etax_manager"/>
+                       <button name="request_tin" string="Request Tin" state="approve" type="object" attrs="{'invisible':[('approve_state','!=','approve')]}" />
+                       <button name="action_rejected" string="Rejected" state="review" type="object" attrs="{'invisible':[('approve_state','in',('new','generate'))]}" groups="etax.group_etax_manager"/>
+
+    				 <field name="approve_state" widget="statusbar" nolabel="1"/>
+
+<!--				</xpath-->
+					 </header>
+                   <!--<form string="Partners" position="attributes">-->
+                       <!--<attribute name="create">False</attribute>-->
+                   <!--</form>-->
+
+
+			    </xpath>
+                <xpath expr="//form[@string='Partners']" position="attributes">
+					<attribute name="create">0</attribute>
+				</xpath>
+                <xpath expr="//form[@string='Partners']" position="attributes">
+					<attribute name="edit">0</attribute>
+				</xpath>
+
+                <xpath expr="//field[@name='parent_id']" position="before">
+                    <label for="last_name"/>
+                    <field name="last_name" placeholder="Last Name"  style="width: 50%" attrs="{'readonly':[('approve_state','not in',('new','review'))]}"/>
+                    <label for="other_name"/>
+                    <field name="other_name" placeholder="Other Name"  style="width: 50%" attrs="{'readonly':[('approve_state','not in',('new','review'))]}"/>
+                    <field name="number" readonly="1"  style="width: 50%"/>
+                </xpath>
+                <field name="category_id" position="after">
+                    <group><group attrs="{'readonly':[('approve_state','not in',('new','review'))]}">
+                                <!--<field name="last_name" placeholder="Last Name" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />-->
+                                <!--<field name="other_name" placeholder="Other Name" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />-->
+                        <field name="marital_state" required="1" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                        <field name="user_id" required="1" string="User" readonly="1"/>
+
+                    </group>
+                        <group attrs="{'readonly':[('approve_state','not in',('new','review'))]}">
+                            <field name="sex" required="1" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+                            <field name="date_of_birth" attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />
+
+                                <!--<field name="parent_id" placeholder="Company"-->
+                                    <!--domain="[('is_company', '=', True)]"-->
+                                    <!--context="{'default_is_company': True, 'default_supplier': supplier, 'default_customer': customer}"-->
+                                    <!--attrs="{'invisible': [('is_company','=', True),('parent_id', '=', False)], 'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />-->
+                                <!--<field name="category_id" widget="many2many_tags"-->
+                                    <!--placeholder="Tags..." attrs="{'readonly': [('approve_state','in', ['review','approve','rejected'])]}" />-->
+                    </group>
+                        </group>
+                </field>
+				<xpath expr="//group/group/field[@name='website']" position="after">
+				   <field name="tax_config_id" groups="etax.group_etax_manager" invisible="1"/>
+                    <field name="tax_office_id" groups="etax.group_etax_manager" readonly="1"/>
+				   <field name="generate_tin" readonly="1" attrs="{'invisible':True}"/>
+        		   <field name="tin" attrs="{'invisible':[('generate_tin','=',False)],'readonly':[('approve_state','not in',('new','review'))]}" />
+        		   <field name="select_tin" invisible="1" attrs="{'invisible':[('generate_tin','=',False)],'readonly':[('approve_state','not in',('new','review'))]}"/>
+				</xpath>
+                 <xpath expr="//field[@name='tax_config_id']" position="before">
+                        <field name="number" readonly="1"/>
+                </xpath>
+                <field name="title" position="after">
+                    <field name="bvn"/>
+                    <field name="license_no"/>
+                    <field name="national_id"/>
+                </field>
+
+                <page string="Internal Notes" position="before">
+                    <page string="Business Details" autofocus="autofocus">
+                        <group>
+                        <group>
+                            <field name="origin_state_id"/>
+                            <field name="local_govt_city"/>
+                            <field name="trade_name"/>
+                            </group>
+                            <group>
+                            <field name="self_employed_business"/>
+                            <field name="business_names"/>
+                            <field name="local_govt_city"/>
+                        </group>
+                        </group>
+                        <group>
+                            <h4>
+                            <label string="Did you receive income from Nigerian properties including land in the current tax year?
+" colspan="2"/>           </h4>
+                            <field name="property_income_receive" nolabel="1"  style="width:10%%" required="1"/>
+
+                            <h4>
+                            <label string="Did you dispose of any chargeable assets within the current tax year?
+" colspan="2"/>           </h4>
+                            <field name="dispose_of_chargeable_assets" nolabel="1"  style="width:10%%" required="1"/>
+
+
+                            <h4>
+                            <label string="Did you receive any Interests from any Nigerian banks, building Societies, and Trusts?
+" colspan="2"/>           </h4>
+                            <field name="interest_income_receive" nolabel="1"  style="width:10%%" required="1"/>
+
+
+                            <h4>
+                            <label string="Did you receive any Dividends within the current tax Year?
+" colspan="2"/>           </h4>
+                            <field name="dividend_income_receive" nolabel="1"  style="width:10%%" required="1"/>
+
+
+                            <h4>
+                            <label string="Was you income over N300,000 ?
+" colspan="2"/>           </h4>
+                            <field name="over_income_receive" nolabel="1"  style="width:10%%"  required="1"/>
+
+
+
+                            <h4>
+                            <label string="Did you receive any Nigerian Pensions, Annuities, or State Benefits, for example, State Pension, Occupational Pension, Retirement Annuity, Disability Benefits ?
+" colspan="2"/>           </h4>
+                            <field name="pasb_income_receive" nolabel="1"  style="width:10%%" required="1"/>
+                            </group>
+                             <label for="reject" />
+                                <field name="reject"  />
+                        </page>
+                </page>
+
+			</field>
+
+		</record>
+
+        <!--<record id="etax_profile_view_inherit" model="ir.ui.view">-->
+			<!--<field name="name">res.partner.form</field>-->
+			<!--<field name="model">res.partner</field>-->
+			<!--<field name="inherit_id" ref="etax.etax_profile_view"/>-->
+
+            <!--<field name="groups_id" eval="[(4, [ref('base.group_etax_officer')])]" />-->
+             <!--<field name="arch" type="xml">-->
+                  <!--<xpath expr="//form[@string='Partners']" position="attributes">-->
+					<!--<attribute name="edit">1</attribute>-->
+				<!--</xpath>-->
+
+             <!--</field>-->
+        <!--</record>-->
+
+		<!-- Search View -->
+		<record id="etax_profile_search" model="ir.ui.view">
+            <field name="name">etax.profile.search</field>
+            <field name="model">res.partner</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Tax Payer">
+                   <field name="name" string="First name"/>
+                   <separator/>
+           <!--          <filter string="Corporates" name="is_company" domain="[('is_company','=',1),('e_tax','=',1)]"/>
+                   <filter string="Employed" name="is_employed" domain="[('is_employed','=',1),('e_tax','=',1)]"/>
+                   <filter string="Self Employed" name="is_self_employed" domain="[('is_self_employed','=',1),('e_tax','=',1)]"/>
+               -->
+               </search>
+            </field>
+        </record>
+
+		<!-- Tree View -->
+		<record id="etax_profile_tree" model="ir.ui.view" >
+			<field name="name">etax.profile.tree</field>
+			<field name="model">res.partner</field>
+			 <field name="type">tree</field>
+			<field name="arch" type="xml">
+				<field name="name" string="name"/>
+                <field name="tin"/>
+                <field name="number"/>
+			</field>
+		</record>
+		<!--Generate Tin Form View-->
+		  <record id="view_generate_tin_form" model="ir.ui.view">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Partners"  create="false"  version="7.0" >
+                	<header>
+			             <!--<button name="action_request_to_approved" string="Request To Approved" state="new" type="object" attrs="{'invisible':[('approve_state','!=','new')]}"/>-->
+			             <!--<button name="action_approve" string="Approved" state="not_approved" type="object" attrs="{'invisible':[('approve_state','!=','review')]}" groups="etax.group_etax_manager"/>-->
+                          <button name="generate" string="Approve/Generate TIN" type="object"
+                                  attrs="{'invisible':['|',('select_tin','!=','tin_menu'),
+                          ('approve_state','!=','request')],
+                          }" groups="etax.group_etax_manager"/>
+
+                        <button name="request_tin" string="Request Tin" state="approve" type="object" attrs="{'invisible':[('approve_state','!=','approve')]}" />
+
+                         	<field name="approve_state" widget="statusbar" statusbar_visible="new,review,request,generate,approve,rejected"/>
+			       </header>
+                <sheet>
+                    <field name="image" widget='image' class="oe_left oe_avatar" options='{"preview_image": "image_medium", "size": [650, 650]}'/>
+                    <label for="name"/> (
+                            <field name="is_company" on_change="onchange_type(is_company)" class="oe_inline"/> <label for="is_company" string="Is a Company?"/>)
+                        <h1>
+                            <field name="name" default_focus="1" placeholder="Name" style="width:40%%"/>
+                        </h1>
+                    	<div class="oe_title">
+                        <div class="oe_edit_only">
+                        </div>
+                        <group col='4'>
+                        <field name="last_name" placeholder="Last Name"/>
+                        <field name="other_name" placeholder="Other Name"/>
+                        <field name="date_of_birth"/>
+                        <field name="sex" required="1" />
+                        <field name="marital_state" required="1"/>
+                        <field name="number" readonly="1"/>
+                        <field name="parent_id"
+                            placeholder="Company"
+                            domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'default_supplier': supplier, 'default_customer': customer}"
+                            attrs="{'invisible': [('is_company','=', True),('parent_id', '=', False)]}"
+                            />
+
+                        <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
+                        </group>
+                    </div>
+                    <div class="oe_right oe_button_box" name="buttons">
+
+                     </div>
+
+
+                    <group>
+                        <group>
+                            <label for="type" attrs="{'invisible': [('parent_id','=', False)]}"/>
+                            <div attrs="{'invisible': [('parent_id','=', False)]}" name="div_type">
+                                <field class="oe_inline"
+                                    name="type"/>
+                            </div>
+
+                            <label for="street" string="Address"/>
+                            <div>
+
+                                <field name="street" placeholder="Street..." />
+                                <field name="street2"  />
+                                <div class="address_format">
+                                    <field name="city" placeholder="City" style="width: 40%%" />
+                                    <field name="state_id" class="oe_no_button" placeholder="State" style="width: 37%%" />
+                                    <field name="zip" placeholder="ZIP" style="width: 20%%" />
+                                </div>
+                                <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}' />
+                            </div>
+                            <field name="phone" placeholder="e.g. +32.81.81.37.00"/>
+                            <field name="mobile"/>
+                            <field name="email" widget="email"/>
+                            <field name="website" widget="url" placeholder="e.g. www.openerp.com"/>
+                            <field name="tax_config_id" invisible="1" groups="etax.group_etax_manager"/>
+                            <field name="tax_office_id" groups="etax.group_etax_manager"/>
+							<field name="generate_tin" attrs="{'invisible':True}"/>
+			        		<field name="tin" attrs="{'invisible':[('generate_tin','=',False)]}"/>
+			        		<field name="select_tin" attrs="{'invisible':True}"/>
+                        </group>
+                        <group>
+                            <label for="street" string="Business Address"/>
+                            <div>
+
+                                <field name="office_street" placeholder="Street..."/>
+                                <field name="office_street2"  />
+                                <div class="address_format">
+                                    <field name="office_city" placeholder="City" style="width: 40%%" />
+                                    <field name="office_state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}' on_change="onchange_state(office_state_id)" />
+                                    <field name="office_zip" placeholder="ZIP" style="width: 20%%"/>
+                                </div>
+                                <field name="office_country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}'/>
+                            </div>
+                            <field name="function" placeholder="e.g. Sales Director"
+                                attrs="{'invisible': [('is_company','=', True)]}"/>
+                            <field name="office_phone" placeholder="e.g. +32.81.81.37.00"/>
+                            <field name="office_mobile"/>
+                            <field name="fax"/>
+
+                            <field name="title" domain="[('domain', '=', 'contact')]"
+                                options='{"no_open": True}' attrs="{'invisible': [('is_company','=', True)]}" />
+                        </group>
+                    </group>
+
+                    <notebook colspan="4">
+                        <page string="Business Details" autofocus="autofocus">
+                        <group>
+                        <group>
+                            <field name="origin_state_id"/>
+                            <field name="local_govt_city"/>
+                            <field name="trade_name"/>
+                            </group>
+                            <group>
+                            <field name="self_employed_business"/>
+                            <field name="business_names"/>
+                            <field name="local_govt_city"/>
+                        </group>
+                        </group>
+                        <group>
+                            <h4>
+                            <label string="Did you receive income from Nigerian properties including land in the current tax year?
+" colspan="2"/>           </h4>
+                            <field name="property_income_receive" nolabel="1"  style="width:10%%" required="1"/>
+
+                            <h4>
+                            <label string="Did you dispose of any chargeable assets within the current tax year?
+" colspan="2"/>           </h4>
+                            <field name="dispose_of_chargeable_assets" nolabel="1"  style="width:10%%" required="1"/>
+
+
+                            <h4>
+                            <label string="Did you receive any Interests from any Nigerian banks, building Societies, and Trusts?
+" colspan="2"/>           </h4>
+                            <field name="interest_income_receive" nolabel="1"  style="width:10%%" required="1"/>
+
+
+                            <h4>
+                            <label string="Did you receive any Dividends within the current tax Year?
+" colspan="2"/>           </h4>
+                            <field name="dividend_income_receive" nolabel="1"  style="width:10%%" required="1"/>
+
+
+                            <h4>
+                            <label string="Was you income over N300,000 ?
+" colspan="2"/>           </h4>
+                            <field name="over_income_receive" nolabel="1"  style="width:10%%"  required="1"/>
+
+
+
+                            <h4>
+                            <label string="Did you receive any Nigerian Pensions, Annuities, or State Benefits, for example, State Pension, Occupational Pension, Retirement Annuity, Disability Benefits ?
+" colspan="2"/>           </h4>
+                            <field name="pasb_income_receive" nolabel="1"  style="width:10%%" required="1"/>
+                            </group>
+                             <label for="reject" />
+                                <field name="reject"  />
+                        </page>
+                        <page string="Internal Notes">
+                            <field name="comment" placeholder="Put an internal note..."/>
+                        </page>
+                        <page string="Sales &amp; Purchases">
+                            <group>
+                                <group>
+                                    <field name="user_id"/>
+                                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                </group>
+                                <group>
+                                    <field name="customer"/>
+                                    <field name="supplier"/>
+                                </group>
+                                <group>
+                                    <field name="ref"/>
+                                    <field name="lang"/>
+                                    <field name="date"/>
+                                </group>
+                                <group>
+                                    <field name="active"/>
+                                </group>
+                            </group>
+                        </page>
+                        <!-- The History page becomes visible as soon as there is something to display inside -->
+                        <page string="History" name="page_history" invisible="True">
+                        </page>
+                    </notebook>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="base.view_partner_tree" model="ir.ui.view">
+            <field name="name">res.partner.tree</field>
+            <field name="model">res.partner</field>
+            <field eval="8" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Contacts" create="false" edit="false">
+                    <field name="display_name"  class="oe_inline"/>
+                    <field name="last_name" class="oe_inline"/>
+                    <field name="number"/>
+                    <field name="function" invisible="1"/>
+                    <field name="phone"/>
+                    <field name="email"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="is_company" invisible="1"/>
+                    <field name="country_id" invisible="1"/>
+                    <field name="parent_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+		<!-- Tree View for generate tin -->
+		<record id="view_partner_tree_id" model="ir.ui.view">
+            <field name="name">res.partner.tree</field>
+            <field name="model">res.partner</field>
+            <field eval="8" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Contacts" create="false" edit="false">
+                    <field name="name"/> <field name="last_name" class="oe_line"/>
+
+                    <field name="function" invisible="1"/>
+                    <field name="phone"/>
+                    <field name="email"/>
+                    <field name="tin"/>
+                    <field name="bvn"/>
+                    <field name="license_no"/>
+                    <field name="national_id"/>
+                    <field name="approve_state"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="is_company" invisible="1"/>
+                    <field name="country" invisible="1"/>
+                    <field name="country_id" invisible="1"/>
+                    <field name="parent_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+		<!-- Action for generate tin profile -->
+		<record id="action_etax_generate_tin" model="ir.actions.act_window">
+            <field name="name">Generate TIN</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="domain">[('select_tin','in',('tin_menu','tin_vals'))]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+<!--            <field name="tree_view_id" ref="etax_profile_tree"/-->
+            <field name="search_view_id" ref="etax_profile_search"/>
+        </record>
+
+       <record id="etax_line_form_action_tree2" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_partner_tree_id"/>
+            <field name="act_window_id" ref="action_etax_generate_tin"/>
+        </record>
+        <record id="etax_line_form_action_form2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_generate_tin_form"/>
+            <field name="act_window_id" ref="action_etax_generate_tin"/>
+        </record>
+       <!--application form-->
+        <record id="view_application_form" model="ir.ui.view">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Partners"  version="7.0" create="0" edit="1">
+                	<header>
+
+			           <button name="action_request_to_approved" string="Request To Approved" type="object" attrs="{'invisible':[('approve_state','=','not_approved')]}"/>
+			           <button name="action_approve" string="Approved" type="object" attrs="{'invisible':[('approve_state','=','new')]}" groups="base.group_etax_admin"/>
+                       <button name="action_rejected" string="Rejected" type="object" attrs="{'invisible':[('approve_state','=','new')]}"  groups="base.group_etax_admin"/>
+                       <field name="approve_state" widget="statusbar"/>
+			       </header>
+                <sheet>
+                	<h1><field name="number" readonly="1"/></h1>
+                	<field name="image" widget='image' class="oe_left oe_avatar" options='{"preview_image": "image_medium", "size": [650, 650]}'/>
+                    <label for="name"/> (
+                            <field name="is_company" on_change="onchange_type(is_company)" class="oe_inline"/> <label for="is_company" string="Is a Company?"/>)
+                        <h1>
+                            <field name="name" default_focus="1" placeholder="Name" style="width:40%%"/>
+                        </h1>
+                    	<div class="oe_title">
+                        <div class="oe_edit_only">
+                        </div>
+                        <group col ='4'>
+                        <field name="last_name" placeholder="Last Name"/>
+                        <field name="other_name" placeholder="Other Name"/>
+                        <field name="date_of_birth" />
+                        <field name="sex" required="1"/>
+                        <field name="marital_state" required="1"/>
+                        <field name="parent_id"
+                            placeholder="Company"
+                            domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'default_supplier': supplier, 'default_customer': customer}"
+                            attrs="{'invisible': [('is_company','=', True),('parent_id', '=', False)]}"
+                            />
+                        <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
+                        </group>
+                    </div>
+                    <group>
+                        <group>
+                            <label for="type" attrs="{'invisible': [('parent_id','=', False)]}"/>
+                            <div attrs="{'invisible': [('parent_id','=', False)]}" name="div_type">
+                                <field class="oe_inline"
+                                    name="type"/>
+                            </div>
+
+                            <label for="street" string="Residence Address"/>
+                            <div>
+
+                                <field name="street" placeholder="Street..." />
+                                <field name="street2"  />
+                                <div class="address_format">
+                                    <field name="city" placeholder="City" style="width: 40%%" />
+                                    <field name="state_id" class="oe_no_button" placeholder="State" style="width: 37%%" />
+                                    <field name="zip" placeholder="ZIP" style="width: 20%%" />
+                                </div>
+                                <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}' />
+                            </div>
+                            <field name="phone" placeholder="e.g. +32.81.81.37.00"/>
+                            <field name="mobile"/>
+                            <field name="email" widget="email"/>
+                            <field name="website" widget="url" placeholder="e.g. www.openerp.com"/>
+                            <field name="tax_config_id" invisible="1" groups="etax.group_etax_manager"/>
+                            <field name="tax_office_id" invisible="0" groups="etax.group_etax_manager"/>
+							<field name="generate_tin" attrs="{'invisible':True}"/>
+			        		<field name="tin" attrs="{'invisible':[('generate_tin','=',False)]}"/>
+			        		<field name="select_tin" attrs="{'invisible':True}"/>
+                        </group>
+                        <group>
+                            <label for="street" string="Business Address"/>
+                            <div>
+
+                                <field name="office_street" placeholder="Street..."/>
+                                <field name="office_street2"  />
+                                <div class="address_format">
+                                    <field name="office_city" placeholder="City" style="width: 40%%" />
+                                    <field name="office_state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}' on_change="onchange_state(office_state_id)" />
+                                    <field name="office_zip" placeholder="ZIP" style="width: 20%%"/>
+                                </div>
+                                <field name="office_country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}'/>
+                            </div>
+                            <field name="function" placeholder="e.g. Sales Director"
+                                attrs="{'invisible': [('is_company','=', True)]}"/>
+                            <field name="office_phone" placeholder="e.g. +32.81.81.37.00"/>
+                            <field name="office_mobile"/>
+                            <field name="fax"/>
+
+                            <field name="title" domain="[('domain', '=', 'contact')]"
+                                options='{"no_open": True}' attrs="{'invisible': [('is_company','=', True)]}" />
+                        </group>
+                    </group>
+
+                    <notebook colspan="4">
+                        <page string="Business Details" autofocus="autofocus">
+                        <group>
+                        <group>
+                            <field name="origin_state_id"/>
+                            <field name="local_govt_city"/>
+                            <field name="trade_name"/>
+                            </group>
+                            <group>
+                            <field name="self_employed_business"/>
+                            <field name="business_names"/>
+                            <field name="local_govt_city"/>
+                        </group>
+                        </group>
+                        <group>
+                            <h4>
+                            <label string="Did you receive income from Nigerian properties including land in the current tax year?
+" colspan="2"/>           </h4>
+                            <field name="property_income_receive" nolabel="1"  style="width:10%%" required="1"/>
+
+                            <h4>
+                            <label string="Did you dispose of any chargeable assets within the current tax year?
+" colspan="2"/>           </h4>
+                            <field name="dispose_of_chargeable_assets" nolabel="1"  style="width:10%%" required="1"/>
+
+
+                            <h4>
+                            <label string="Did you receive any Interests from any Nigerian banks, building Societies, and Trusts?
+" colspan="2"/>           </h4>
+                            <field name="interest_income_receive" nolabel="1"  style="width:10%%" required="1"/>
+
+
+                            <h4>
+                            <label string="Did you receive any Dividends within the current tax Year?
+" colspan="2"/>           </h4>
+                            <field name="dividend_income_receive" nolabel="1"  style="width:10%%" required="1"/>
+
+
+                            <h4>
+                            <label string="Was you income over N300,000 ?
+" colspan="2"/>           </h4>
+                            <field name="over_income_receive" nolabel="1"  style="width:10%%"  required="1"/>
+
+
+
+                            <h4>
+                            <label string="Did you receive any Nigerian Pensions, Annuities, or State Benefits, for example, State Pension, Occupational Pension, Retirement Annuity, Disability Benefits ?
+" colspan="2"/>           </h4>
+                            <field name="pasb_income_receive" nolabel="1"  style="width:10%%" required="1"/>
+                            </group>
+                        </page>
+                        <!-- <page string="Internal Notes">
+                            <field name="comment" placeholder="Put an internal note..."/>
+                        </page>
+                        <page string="Sales &amp; Purchases">
+                            <group>
+                                <group>
+                                    <field name="user_id"/>
+                                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                </group>
+                                <group>
+                                    <field name="customer"/>
+                                    <field name="supplier"/>
+                                </group>
+                                <group>
+                                    <field name="ref"/>
+                                    <field name="lang"/>
+                                    <field name="date"/>
+                                </group>
+                                <group>
+                                    <field name="active"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="History" name="page_history" invisible="True">
+                        </page> -->
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+                </form>
+            </field>
+        </record>
+        <!-- Tree View for generate tin -->
+		<record id="view_application_tree_id" model="ir.ui.view">
+            <field name="name">res.partner.tree</field>
+            <field name="model">res.partner</field>
+            <field eval="8" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Contacts" create="false" edit="false">
+                    <field name="name"/>
+                    <field name="last_name"/>
+
+                    <field name="function" invisible="1"/>
+                    <field name="phone"/>
+                    <field name="email"/>
+                    <field name="user_id" invisible="0"/>
+                    <field name="tin"/>
+                    <field name="approve_state"/>
+                    <field name="is_company" invisible="1"/>
+                    <field name="country" invisible="1"/>
+                    <field name="country_id" invisible="1"/>
+                    <field name="parent_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        <!--Action for application_form-->
+        <record id="action_etax_application_form" model="ir.actions.act_window">
+            <field name="name">Application Form</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="domain">[('approve_state','=','new'),('user_id','=',uid)]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="etax_profile_search"/>
+        </record>
+        <record id="etax_application_form_action_tree2" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_application_tree_id"/>
+            <field name="act_window_id" ref="action_etax_application_form"/>
+        </record>
+        <record id="etax_application_form_action_form2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_application_form"/>
+            <field name="act_window_id" ref="action_etax_application_form"/>
+        </record>
+		<!-- Action for creating corporate profile -->
+	<!-- 	<record id="action_etax_corporate_form" model="ir.actions.act_window">
+            <field name="name">Corporate</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="search_view_id" ref="etax_profile_search"/>
+            <field name="domain">[('e_tax','=',True),('is_company','=',True),('approve_state','=','approve')]</field>
+            <field name="context">{'default_e_tax':True, 'search_default_e_tax':True, 'default_supplier':False, 'default_customer':False, 'default_is_company':True, 'search_default_is_company':True}</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+         -->
+
+        <record id="action_etax_corporate_form" model="ir.actions.act_window">
+            <field name="name">Corporate</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="domain">[('is_approve','=',True),('approve_state','in',('approve','request','generate')),('application_type','=','corporate')]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+        <!-- Action for creating employed profile -->
+      <!--   <record id="action_etax_employed_form" model="ir.actions.act_window">
+            <field name="name">Employed</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="search_view_id" ref="etax_profile_search"/>
+            <field name="domain">[('e_tax','=',True),('is_employed','=',True),('approve_state','=','approve')]</field>
+            <field name="context">{'default_e_tax':True, 'search_default_e_tax':True, 'default_supplier':False, 'default_customer':False, 'default_is_employed':True, 'search_default_is_employed':True}</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+         -->
+
+        <record id="action_etax_employed_form" model="ir.actions.act_window">
+            <field name="name">Employed</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="domain">[('is_approve','=',True),('approve_state','in',('approve','request','generate')),('application_type','=','employed')]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+        <!--<record id="view_self_emplyd_form" model="ir.actions.act_window.view">-->
+            <!--<field eval="2" name="sequence"/>-->
+            <!--<field name="view_mode">form</field>-->
+            <!--<field name="view_id" ref="etax_profile_view"/>-->
+            <!--<field name="act_window_id" ref="action_etax_employed_form"/>-->
+        <!--</record>-->
+
+        <!--<record id="view_self_emplyd_tree" model="ir.actions.act_window.view">-->
+            <!--<field eval="1" name="sequence"/>-->
+            <!--<field name="view_mode">tree</field>-->
+            <!--<field name="view_id" ref="view_application_tree_id"/>-->
+            <!--<field name="act_window_id" ref="action_etax_employed_form"/>-->
+        <!--</record>-->
+
+        <!-- Action for creating self employed profile -->
+     <!--    <record id="action_etax_self_employed_form" model="ir.actions.act_window">
+            <field name="name">Self Employed</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="search_view_id" ref="etax_profile_search"/>
+            <field name="domain">[('e_tax','=',True),('is_self_employed','=',True),('approve_state','=','approve')]</field>
+            <field name="context">{'default_e_tax':True, 'search_default_e_tax':True, 'default_supplier':False, 'default_customer':False, 'default_is_self_employed':True, 'search_default_is_self_employed':True}</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+         -->
+
+
+        <record id="action_etax_self_employed_form" model="ir.actions.act_window">
+            <field name="name">Self Employed</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="domain">[('is_approve','=',True),('approve_state','in',('approve','request','generate')),('application_type','=','self_employed')]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+        <!--<record id="view_self_emp_form" model="ir.actions.act_window.view">-->
+            <!--<field eval="10" name="sequence"/>-->
+            <!--<field name="view_mode">form</field>-->
+            <!--<field name="view_id" ref="base.view_partner_form"/>-->
+            <!--<field name="act_window_id" ref="action_etax_self_employed_form"/>-->
+        <!--</record>-->
+
+        <!--<record id="view_self_emp_tree" model="ir.actions.act_window.view">-->
+            <!--<field eval="9" name="sequence"/>-->
+            <!--<field name="view_mode">tree</field>-->
+            <!--<field name="view_id" ref="view_application_tree_id"/>-->
+            <!--<field name="act_window_id" ref="action_etax_self_employed_form"/>-->
+        <!--</record>-->
+
+        <record id="action_etax_approved_form" model="ir.actions.act_window">
+            <field name="name">To Be Approved</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="search_view_id" ref="etax_profile_search"/>
+            <field name="domain">[('approve_state','=','not_approved')]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+        <record id="etax_application_form_action_tree22" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_application_tree_id"/>
+            <field name="act_window_id" ref="action_etax_approved_form"/>
+        </record>
+        <record id="etax_application_form_action_form22" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_application_form"/>
+            <field name="act_window_id" ref="action_etax_approved_form"/>
+        </record>
+
+        <record id="etax_application_kanban_action_form22" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="base.res_partner_kanban_view"/>
+            <field name="act_window_id" ref="action_etax_approved_form"/>
+        </record>
+
+        <!-- Menu for creating profile -->
+        <menuitem id="etax_profile_menu" parent="etax_top_menu" name="Profile" sequence="1"/>
+        <menuitem id="etax_create_corporate_profile" parent="etax_profile_menu" action="action_etax_corporate_form" name="Corporate" sequence="1" groups="base.group_tax_corporate,-group_etax_tax_payer"/>
+        <menuitem id="etax_create_employed_profile" parent="etax_profile_menu" action="action_etax_employed_form" name="Employed" sequence="2" groups="base.group_tax_employed,-group_etax_tax_payer"/>
+        <menuitem id="etax_create_self_employed_profile" parent="etax_profile_menu" action="action_etax_self_employed_form" name="Self Employed" sequence="3" groups="base.group_tax_self_employed,-group_etax_tax_payer"/>
+        <menuitem id="etax_generate_tin_profile_menu_id" parent="etax_profile_menu" name="Generate TIN" action="action_etax_generate_tin" sequence="4" groups="base.group_tax_generate_tin"/>
+        <menuitem id="etax_approved_profile" parent="etax_profile_menu" action="action_etax_approved_form" name="To Be Approved" sequence="5" groups="base.group_tax_approved"/>
+        <menuitem id="etax_application_profile_menu_id" parent="etax_profile_menu" name="Application Form" action="action_etax_application_form" sequence="6" groups="etax.group_etax_manager"/>
+
+        <!-- Creating Tax Offices -->
+        <!-- Form View -->
+        <record id="etax_tax_office_form" model="ir.ui.view">
+        	<field name="name">etax.tax.office.form</field>
+        	<field name="model">etax.tax.office</field>
+        	<field name="arch" type="xml">
+        		<form string="Tax Office" version="7.0">
+        		<sheet>
+        			<group>
+        				<group>
+        					<field name="name"/>
+        					<field name="city"/>
+        					<field name="state_id"/>
+        				</group>
+        				<group>
+                            <field name="tax_config_id" required="1"/>
+        				</group>
+        			</group>
+        			</sheet>
+        			<div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+        		</form>
+        	</field>
+        </record>
+
+        <!-- Tree View -->
+        <record id="etax_tax_office_tree" model="ir.ui.view">
+        	<field name="name">etax.tax.office.form</field>
+        	<field name="model">etax.tax.office</field>
+        	<field name="arch" type="xml">
+        		<tree string="Tax Office" version="7.0">
+        			<field name="name"/>
+        			<field name="city"/>
+        			<field name="state_id"/>
+        		</tree>
+        	</field>
+        </record>
+
+        <!-- Search View -->
+        <record id="etax_tax_office_search" model="ir.ui.view">
+            <field name="name">etax.profile.search</field>
+            <field name="model">res.partner</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Tax Payer">
+                   <field name="name" string="Name of the Tax office" filter_domain="[('name','ilike', self)]"/>
+                   <field name="city" string="City" filter_domain="[('city','ilike', self)]"/>
+                   <field name="state_id" string="State" filter_domain="[('state_id','ilike', self)]"/>
+                </search>
+            </field>
+        </record>
+        <!-- Action for creating tax offices -->
+        <record id="action_etax_tax_office" model="ir.actions.act_window">
+            <field name="name">Tax Office</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">etax.tax.office</field>
+            <field name="search_view_id" ref="etax_tax_office_search"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <!--Tax Configuration Form View-->
+        <record id="tax_configuration_form12" model="ir.ui.view">
+        	<field name="name">tax.configuration.form</field>
+        	<field name="model">tax.configuration</field>
+        	<field name="arch" type="xml">
+        		<form string="Tax Configuration" >
+        		<sheet>
+        			<group>
+        				<group>
+        				    <field name="name"/>
+                            <field name="tin_prefix"/>
+         				    <field name="assessment_charges_product" domain="[('name','=',('Service'))]"/>
+        				    <field name="admin_charges_product" domain="[('name','=',('Service'))]"/>
+                            <!--<field name="tin_no"/>-->
+        				    <!-- <field name="companies_income_product" domain="[('name','=',('Service'))]"/>
+        				    <field name="petroleurm_profit_product" domain="[('name','=',('Service'))]"/>
+        				    <field name="education_tax_product" domain="[('name','=',('Service'))]"/>
+        				    <field name="technology_levy_product" domain="[('name','=',('Service'))]"/> -->
+        				       <field name="account_tax_id" widget="many2many_tags"/>
+        				</group>
+        				<group>
+        				    <field name="product" domain="[('name','=',('Service'))]"/>
+        				    <field name="assessment_charges"/>
+        				    <field name="admin_charges"/>
+
+
+        			<!-- 	    <field name="companies_income_tax"/>
+        				    <field name="petroleurm_profit_tax"/>
+        				    <field name="education_tax"/>f
+        				    <field name="technology_levy"/> -->
+        				</group>        				
+        			</group>
+        			</sheet>
+        			<div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+        		</form>
+        	</field>
+        </record>
+        <!--Tax Configuration Tree View-->
+        <record id="tax_configuration_tree" model="ir.ui.view">
+        	<field name="name">tax.configuration.tree</field>
+        	<field name="model">tax.configuration</field>
+        	<field name="arch" type="xml">
+        		<tree string="Tax Configuration" version="7.0">
+                    <field name="name"/>
+                    <field name="tin_prefix"/>
+                    <field name="product"/>
+        		</tree>
+        	</field>
+        </record>
+        <!--Tax Configuration Action View-->
+         <record id="action_tax_configuration" model="ir.actions.act_window">
+            <field name="name">Tax Configuration</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">tax.configuration</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="tax_configuration_tree"/>
+        </record>
+        <record id="etax_claim_form" model="ir.ui.view">
+        	<field name="name">etax.claim.form</field>
+        	<field name="model">etax.claim</field>
+        	<field name="arch" type="xml">
+        		<form string="E-TAX Claims" version="7.0">
+        		<header>
+        		   <button name="action_submit" string="Submit" states="draft" type="object" class="oe_highlight" color="red" />
+        		   <button name="action_accept" string="Accept" type="object" states="submit" class="oe_highlight" color="red"/>
+        		   <button name="action_reject" string="Reject" type="object" states="submit" class="oe_highlight" color="red"/>
+        		   <button name="action_done" string="Done" type="object" states="accept" class="oe_highlight" color="red"/>
+ 					<field name="state" widget="statusbar"/>	   
+        		 </header>
+        		<sheet>
+        		 
+        			<group>
+        				<group>
+        				    <field name="name" domain="[('name','=','user_id.name')]"/>
+        				    <field name="partner_id" readonly="1"/>
+        				    <field name="user_id" readonly="1"/>
+        				    <field name="tax_id" required="1"/>
+        				</group>
+        				<group>
+        				    <field name="submit_date"/>
+        				    <field name="accept_date"/>
+        				    <field name="reject_date"/>
+        				    <field name="done_date"/>
+        				</group>
+        		  </group>
+                    <notebook>
+                        <page string="Description">
+                            <group>
+                                <field name="comment"/>
+                            </group>
+                        </page>
+                    </notebook>
+        		  </sheet>
+        		  <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+     		         </form>
+        	   </field>
+        </record>
+        <record id="etax_claim_tree" model="ir.ui.view">
+        	<field name="name">etax.claim.tree</field>
+        	<field name="model">etax.claim</field>
+        	<field name="arch" type="xml">
+        		<tree string="E-TAX Claims" version="7.0">
+        				    <field name="name"/>
+                        <field name="user_id" readonly="1"/>
+                        <field name="tax_id" required="1"/>
+        		</tree>
+        	</field>
+        </record>
+         <record id="action_etax_claim" model="ir.actions.act_window">
+            <field name="name">E-TAX Claims</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">etax.claim</field>
+            <field name="domain">[('user_id', '=', uid)]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="etax_claim_tree"/>
+
+        </record>
+
+        <record id="mail.mail_inboxfeeds" model="ir.ui.menu">
+          <field name="name">Inbox</field>
+          <field name="sequence" eval="10"/>
+          <field name="action" ref="mail.action_mail_inbox_feeds"/>
+          <field name="parent_id" ref="mail.mail_feeds"/>
+              <field name="groups_id" eval="[(4,ref('base.group_no_one'))]"/>
+
+        </record>
+
+        <record id="mail.mail_tomefeeds" model="ir.ui.menu">
+          <field name="name">To: me</field>
+          <field name="sequence" eval="11"/>
+          <field name="action" ref="mail.action_mail_to_me_feeds"/>
+          <field name="parent_id" ref="mail.mail_feeds"/>
+           <field name="groups_id" eval="[(4,ref('base.group_no_one'))]"/>
+        </record>
+        <record id="mail.mail_starfeeds" model="ir.ui.menu">
+          <field name="name">To-do</field>
+          <field name="sequence" eval="14"/>
+          <field name="action" ref="mail.action_mail_star_feeds"/>
+          <field name="parent_id" ref="mail.mail_feeds"/>
+            <field name="groups_id" eval="[(4,ref('base.group_no_one'))]"/>
+        </record>
+        <record id="mail.mail_archivesfeeds" model="ir.ui.menu">
+          <field name="name">Archives</field>
+          <field name="sequence" eval="16"/>
+          <field name="action" ref="mail.action_mail_archives_feeds"/>
+          <field name="parent_id" ref="mail.mail_feeds"/>
+            <field name="groups_id" eval="[(4,ref('base.group_no_one'))]"/>
+        </record>
+
+
+
+        <record id="etax_tax_attachmnet_form" model="ir.ui.view">
+        	<field name="name">etax.attachment.form</field>
+        	<field name="model">etax.attachment</field>
+        	<field name="arch" type="xml">
+        		<form string="Tax Office" version="7.0">
+        		<sheet>
+        			<group>
+        				<group>
+        					<field name="name"/>
+                            <field name="datas" invisible="1"/>
+                            <field name="attachments_id" filename="datas"/>
+
+                        </group></group>
+        			</sheet>
+        			<div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+        		</form>
+        	</field>
+        </record>
+
+        <!-- Tree View -->
+        <record id="etax_tax_attachment_tree" model="ir.ui.view">
+        	<field name="name">etax.attachment.form</field>
+        	<field name="model">etax.attachment</field>
+        	<field name="arch" type="xml">
+        		<tree string="Tax Office" version="7.0">
+        			<field name="name"/>
+        			<field name="attachments_id" />
+
+        		</tree>
+        	</field>
+        </record>
+
+
+        <!-- Action for creating tax offices -->
+        <record id="action_etax_attachment" model="ir.actions.act_window">
+            <field name="name">Tax Attachment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">etax.attachment</field>
+            <!--<field name="search_view_id" ref="etax_tax_office_search"/>-->
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+
+        
+        <!-- Menu for creating Tax Offices -->
+        <menuitem id="etax_configuration" parent="etax_top_menu" name="Configuration" sequence="5"/>
+        <menuitem id="etax_config_tax_office" parent="etax_configuration" action="action_etax_tax_office" name="Tax Office" sequence="1" groups="base.group_tax_office"/>
+        <menuitem id="tax_configuration" parent="etax_configuration" action="action_tax_configuration" name="Tax Configuration" sequence="2" groups="base.group_tax_configuration"/>
+        <menuitem id="etax_claims" parent="etax_tax_assessment_menu" action="action_etax_claim" name="Claims" sequence="3"/>
+        <menuitem id="base.menu_reporting_dashboard" name="Dashboards" parent="base.menu_reporting" sequence="0" groups="base.group_no_one"/>
+        <menuitem name="Calendar" id="calendar.mail_menu_calendar" parent="mail.mail_my_stuff" sequence="10" action="calendar.action_calendar_event" groups="base.group_no_one"/>
+        <menuitem id="mail.mail_allgroups" parent="mail.mail_group_root" sequence="100" action="mail.action_view_groups" groups="base.group_no_one"/>
+        <menuitem id="mail.mail_group_root" parent="mail.mail_feeds_main" sequence="12" name="My Groups"  groups="base.group_no_one"/>
+
+        <menuitem id="attachment_configuration" parent="etax_configuration" action="action_etax_attachment" name="Attachment Configuration" sequence="2" groups="base.group_tax_configuration"/>
+
+    </data>
+</openerp>

@@ -1,0 +1,20 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_partner_application_form_etax_payer,access.partner.application.form.etax.payer,model_partner_application_form,etax.group_etax_tax_payer,1,1,1,1
+access_res_partner_etax_payer,access.res.partner.etax.payer,base.model_res_partner,etax.group_etax_tax_payer,1,1,1,1
+
+access_partner_application_form_firs,access.partner.application.form.firs,model_partner_application_form,base.group_firs,1,1,1,1
+access_partner_application_form_nimc,access.partner.application.form.nimc,model_partner_application_form,base.group_nimc,1,1,1,1
+
+access_partner_application_menu1,access.menu,base.model_ir_ui_menu,,1,1,1,1
+access_ir_exports_group_system1,ir_exports group_system,base.model_ir_exports,,1,1,1,1
+access_ir_exports_line_group_system1,ir_exports_line group_system,base.model_ir_exports_line,,1,1,1,1
+access_ir_fields_converter_group_system1,ir_fields_converter,base.model_ir_fields_converter,,1,1,1,1
+access_ir_model_data_user1,ir_model_data user,base.model_ir_model_data,,1,0,1,0
+access_ir_ui_menu_group_user,ir_ui_menu group_user,base.model_ir_ui_menu,,1,0,0,0
+access_ianalytic_user,analytic.read,analytic.model_account_analytic_account,,1,0,0,0
+
+
+
+
+

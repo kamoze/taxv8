@@ -1,0 +1,31 @@
+<openerp>
+    <data>
+
+        <menuitem name="Accounting"
+            id="account.menu_finance"
+            groups="account.group_account_user,account.group_account_manager,account.group_account_invoice,base.group_account_custom"
+            sequence="50"/>
+
+        <menuitem action="account.action_invoice_tree1" id="account.menu_action_invoice_tree1" parent="account.menu_finance_receivables" groups="account.group_account_user,account.group_account_manager,account.group_account_invoice,base.group_account_custom"/>
+        <menuitem action="account_voucher.action_vendor_receipt" icon="STOCK_JUSTIFY_FILL" sequence="12"
+            id="account_voucher.menu_action_vendor_receipt"  parent="account.menu_finance_receivables" groups="account.group_account_user,account.group_account_manager,account.group_account_invoice,base.group_account_custom"/>
+
+        <menuitem id="account.menu_finance_payables" name="Suppliers" parent="account.menu_finance" sequence="3"  groups="account.group_account_user,account.group_account_manager,account.group_account_invoice"/>
+
+        <menuitem name="Portal"
+            id="portal.portal_menu"
+                  parent="base.menu_administration"
+            sequence="15"/>
+
+        <menuitem id="account.menu_account_customer" name="Customers"
+            parent="account.menu_finance_receivables"
+            action="base.action_partner_customer_form" sequence="100" groups="account.group_account_user,account.group_account_manager,account.group_account_invoice"/>
+
+        <menuitem id="account_voucher.menu_action_sale_receipt" icon="STOCK_JUSTIFY_FILL"
+            action="account_voucher.action_sale_receipt"
+            parent="account.menu_finance_receivables"
+            sequence="10" groups="account.group_account_user,account.group_account_manager,account.group_account_invoice"/>
+
+
+    </data>
+</openerp>

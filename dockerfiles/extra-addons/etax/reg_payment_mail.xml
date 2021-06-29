@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+
+        <record id="invoice_payment_template" model="email.template">
+            <field name="name">Confirmation of the Payment</field>
+            <field name="model_id" ref="account_voucher.model_account_voucher"/>
+            <!--<field name="email_from" >${(object.user_id.email or object.company_id.email or 'noreply@' + object.company_id.name + '.com')|safe}</field>-->
+            <field name="email_to" >${object.partner_id.email|safe}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html"><![CDATA[
+            <p> Hello</p>
+            ]]></field>
+        </record>
+
+    </data>
+</openerp>

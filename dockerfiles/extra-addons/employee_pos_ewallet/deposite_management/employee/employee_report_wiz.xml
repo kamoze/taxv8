@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="employee_deposites_expense_form_view" model="ir.ui.view">
+            <field name="name">employee.deposites.expense.form.view</field>
+            <field name="model">employee.deposite.expense.wiz</field>
+            <field name="arch" type="xml" >
+                <form>
+                    <header>
+                        <button name="act_print" type="object" string="Print"/>
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" required="1" />
+                            </group>
+                            <group>
+                                <field name="from_date" required="1" />
+                            </group>
+                        </group>
+                        <group>
+                            <field name="employee_ids" required="1" nolabel="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="employee_deposite_expense_action_wiz" model="ir.actions.act_window">
+            <field name="name">Employee Deposit/Expense</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">employee.deposite.expense.wiz</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="menu_action_employee_deposite_expense_wiz" action="employee_deposite_expense_action_wiz" 
+                name="E-Wallet Report" 
+                parent="menu_employee_deposite"
+                groups="base.group_user,base.group_hr_user,base.group_hr_manager" 
+                 />
+
+        <menuitem id="menu_action_employee_deposite_expense" action="employee_deposite_expense_action_wiz" 
+                name="Employee E-Wallet Report" parent="account.menu_finance_receivables" sequence="251" 
+                groups="account.group_account_user,account.group_account_manager,account.group_account_invoice,base.group_user,base.group_hr_user,base.group_hr_manager" />
+
+    </data>
+</openerp>

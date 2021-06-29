@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+	<record id="base.group_etax_user" model="res.groups">
+        <field name="name">E-Tax User</field>
+    </record>
+	<record id="group_etax_manager" model="res.groups">
+        <field name="name">E-Tax Manager</field>
+    </record> 
+    <!--
+    <record id="group_etax_tax_payer" model="res.groups">
+        <field name="name">E-Tax Payer</field>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+    -->
+    <record id="group_etax_tax_payer" model="res.groups">
+        <field name="name">E-Tax Payer</field>
+    </record>
+    <record id="base.group_etax_officer" model="res.groups">
+        <field name="name">E-Tax Officer</field>
+    </record>
+    <record id="base.group_etax_admin" model="res.groups">
+        <field name="name">E-Tax Admin</field>
+    </record>
+    <record id="base.group_etax_oe_admin" model="res.groups">
+        <field name="name">E-Tax OE Admin</field>
+    </record>
+    <record id="base.group_tax_assessment" model="res.groups">
+        <field name="name">Tax Assesment</field>
+    </record>
+    <record id="base.group_tax_office" model="res.groups">
+         <field name="name">Tax Office</field>
+    </record>
+    <record id="base.group_tax_configuration" model="res.groups">
+         <field name="name">Tax Configuration</field>
+    </record>
+    <!-- <record id="base.group_tax_claims" model="res.groups">
+         <field name="name">E-TAX Claims</field>
+    </record>-->
+    <record id="base.group_tax_forms" model="res.groups">
+         <field name="name">Tax Forms</field>
+    </record>
+    <record id="base.group_tax_corporate" model="res.groups">
+        <field name="name">Corporate</field>
+    </record>
+    <record id="base.group_tax_self_employed" model="res.groups">
+        <field name="name">Self Employed</field>
+    </record>
+    <record id="base.group_tax_employed" model="res.groups">
+        <field name="name">Employed</field>
+    </record>
+    <record id="base.group_tax_generate_tin" model="res.groups">
+        <field name="name">Generate TIN</field>
+    </record>
+    <record id="base.group_tax_approved" model="res.groups">
+        <field name="name">To Be Approved</field>
+    </record>
+    <record id="base.group_tax_application_form" model="res.groups">
+        <field name="name">Application Form</field>
+    </record>
+   <record id="base.group_demand_notice" model="res.groups">
+        <field name="name">Demand Notice</field>
+    </record>
+
+    <record id="base.group_account_custom" model="res.groups">
+        <field name="name">Tax Accounting</field>
+    </record>
+
+    <record id="group_certificate_liability" model="res.groups">
+        <field name="name">Certificate Liability</field>
+    </record>
+
+    <record id="group_certificate_" model="res.groups">
+        <field name="name">Certificate Account</field>
+    </record>
+
+    <record id="group_certificate_liability" model="res.groups">
+        <field name="name">Certificate Print</field>
+    </record>
+   <!--rules-->
+   <record id="etax_user_rule1" model="ir.rule">
+        <field name="name">Users rule</field>
+        <field name="model_id" ref="model_tax_calculator_individual"/>
+        <field name="domain_force">['|',('user_id','=',False), ('user_id', '=', user.id)]</field>
+        <field name="global" eval="True"/>
+   </record>
+
+    <record id="etax_user_rule12" model="ir.rule">
+        <field name="name">Users rule</field>
+        <field name="model_id" ref="model_tax_calculator_individual"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_etax_manager'))]"/>
+   </record>
+
+    <record id="etax_user_rule123" model="ir.rule">
+        <field name="name">Users rule</field>
+        <field name="model_id" ref="model_tax_calculator_individual"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_etax_officer')),(4, ref('base.group_tax_office'))]"/>
+   </record>
+
+    <record id="etax_certificate" model="ir.rule">
+        <field name="name">Certificate</field>
+        <field name="model_id" ref="model_tax_certificate"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <!--<field name="global" eval="True"/>-->
+        <field name="groups" eval="[(4, ref('base.group_etax_officer'))]"/>
+   </record>
+
+    <record id="etax_certificate_manager" model="ir.rule">
+        <field name="name">Certificate</field>
+        <field name="model_id" ref="model_tax_certificate"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="global" eval="True"/>
+        <!--<field name="groups" eval="[(4, ref('base.group_etax_manager'))]"/>-->
+   </record>
+
+    <record id="etax_corp" model="ir.rule">
+        <field name="name">Corporate Tax</field>
+        <field name="model_id" ref="model_corporate_tax"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="global" eval="True"/>
+        <!--<field name="groups" eval="[(4, ref('base.group_etax_officer'))]"/>-->
+   </record>
+
+    <record id="etax_corp_manager" model="ir.rule">
+        <field name="name">Certificate</field>
+        <field name="model_id" ref="model_corporate_tax"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <!--<field name="global" eval="True"/>-->
+        <field name="groups" eval="[(4, ref('group_etax_manager'))]"/>
+   </record>
+
+
+    <record id="etax_pay" model="ir.rule">
+        <field name="name">Tax Payment</field>
+        <field name="model_id" ref="model_taxpayer_payment"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="global" eval="True"/>
+        <!--<field name="groups" eval="[(4, ref('base.group_etax_officer'))]"/>-->
+   </record>
+
+    <record id="etax_corp_manager" model="ir.rule">
+        <field name="name">Tax Payment</field>
+        <field name="model_id" ref="model_taxpayer_payment"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <!--<field name="global" eval="True"/>-->
+        <field name="groups" eval="[(4, ref('group_etax_manager'))]"/>
+   </record>
+
+
+
+    <!--<record id="portal_account_invoice_user_rule" model="ir.rule">-->
+            <!--<field name="name">Portal Personal Account Invoices</field>-->
+            <!--<field name="model_id" ref="account.model_account_invoice"/>-->
+            <!--<field name="domain_force">[('message_follower_ids','child_of',[user.commercial_partner_id.id])]</field>-->
+            <!--<field name="groups" eval="[(4, ref('base.group_portal'))]"/>-->
+        <!--</record>-->
+
+    <record id="portal_account_invoice_user_rule1" model="ir.rule">
+            <field name="name">Portal Personal Account</field>
+            <field name="model_id" ref="account.model_account_invoice"/>
+            <field name="domain_force">['|',('user_id','=',False),('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_etax_user'))]"/>
+            <!--<field name="global" eval="True"/>-->
+    </record>
+
+    <record id="portal_account_invoice_user_rule_line" model="ir.rule">
+            <field name="name">Account invoice line</field>
+            <field name="model_id" ref="account.model_account_invoice_line"/>
+            <field name="domain_force">['|',('invoice_id.user_id','=',False),('invoice_id.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_etax_user'))]"/>
+            <!--<field name="global" eval="True"/>-->
+    </record>
+
+    <record id="portal_account_invoice_line_rule" model="ir.rule">
+            <field name="name">Portal Invoice Lines</field>
+            <field name="model_id" ref="account.model_account_invoice_line"/>
+            <field name="domain_force">['|',('invoice_id.user_id','=',False),('invoice_id.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        </record>
+
+    <record id="portal_account_invoice_user_rule_line_all" model="ir.rule">
+            <field name="name">Account invoice line</field>
+            <field name="model_id" ref="account.model_account_invoice_line"/>
+            <field name="domain_force">[('1','=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_etax_manager'))]"/>
+            <!--<field name="global" eval="True"/>-->
+    </record>
+
+    <record id="portal_account_invoice_user_rule_inher" model="ir.rule">
+            <field name="name">Account invoice all</field>
+            <field name="model_id" ref="account.model_account_invoice"/>
+            <field name="domain_force">[('1','=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_etax_manager'))]"/>
+            <!--<field name="global" eval="True"/>-->
+        </record>
+
+     <record id="portal_account_invoice_user_rule" model="ir.rule">
+            <field name="name">Portal Personal Account</field>
+            <field name="model_id" ref="account.model_account_invoice"/>
+            <field name="domain_force">['|',('user_id','=',False),('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+            <field name="global" eval="True"/>
+        </record>
+
+    <!--<record id="etax_user_rule" model="ir.rule">-->
+        <!--<field name="name">Users rule</field>-->
+        <!--<field ref="res_partner" name="model_id"/>-->
+        <!--<field name="domain_force">[('user_ids', 'in', user.id)]</field>-->
+        <!--<field name="groups" eval="[(4, ref('base.group_etax_user'))]"/>-->
+   <!--</record>-->
+
+    <!--<record id="account_invoice_inher" model="ir.rule">-->
+        <!--<field name="name">Entry lines</field>-->
+        <!--<field name="model_id" ref="model_account_invoice"/>-->
+        <!--<field name="global" eval="True"/>-->
+        <!--<field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>-->
+    <!--</record>-->
+
+</data>
+</openerp>

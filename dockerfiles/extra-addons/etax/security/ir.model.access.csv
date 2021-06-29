@@ -1,0 +1,49 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_etax_tax_hr user3,etax.tax.office,model_etax_tax_office,base.group_user,1,1,1,0
+access_etax_tax_user user2,etax.tax.office,model_etax_tax_office,base.group_etax_user,1,0,0,0
+
+access_etax_tax_office user1,etax.tax.office,model_etax_tax_office,group_etax_manager,1,1,1,0
+access_tax_calculator_corporate user1,tax.calculator.corporate,model_tax_calculator_corporate,base.group_etax_user,1,1,1,0
+access_tax_calculator_individual user1,tax.calculator.individual,model_tax_calculator_individual,,1,1,1,0
+access_etax_demand_notice user1,etax.demand.notice,model_etax_demand_notice,base.group_etax_user,1,1,0,0
+
+access_etax_tax_configuration user1,tax.configuration,model_tax_configuration,base.group_tax_configuration,1,1,1,0
+access_etax_claim user1,etax.claim,model_etax_claim,base.group_etax_user,1,1,1,0
+access_select_tax_form user1,select.tax.form,model_select_tax_form,base.group_tax_forms,1,1,0,0
+
+access_tax_certificate user1,tax.certificate,model_tax_certificate,base.group_etax_user,1,1,1,0
+access_corporate_tax user1,corporate.tax,model_corporate_tax,base.group_etax_user,1,1,0,0
+access_taxpayer_payment user1,taxpayer.payment,model_taxpayer_payment,base.group_etax_user,1,1,0,0
+access_invoice_user1,taxpayer.invoice,account.model_account_invoice,base.group_account_custom,1,0,0,0
+access_invoice_user2,taxpayer.invoice,account.model_account_invoice_line,base.group_account_custom,1,0,0,0
+access_invoice_user3,taxpayer.invoice,account_voucher.model_account_voucher,base.group_account_custom,1,0,0,0
+access_invoice_user5,taxpayer.invoice,account_voucher.model_account_voucher_line,base.group_account_custom,1,0,0,0
+access_invoice_user6,taxpayer.invoice,account.model_account_invoice_tax,base.group_account_custom,1,0,0,0
+access_invoice_user7,taxpayer.invoice,account.model_product_template,base.group_account_custom,1,0,0,0
+access_invoice_user8,taxpayer.invoice,account.model_account_tax,base.group_account_custom,1,0,0,0
+access_invoice_user9,taxpayer.invoice,account.model_account_journal,base.group_account_custom,1,0,0,0
+access_invoice_user10,taxpayer.invoice,account.model_account_period,base.group_account_custom,1,0,0,0
+access_invoice_user11,taxpayer.invoice,account.model_account_account,base.group_account_custom,1,0,0,0
+
+access_invoice_user12,taxpayer.invoice,account.model_account_move,base.group_account_custom,1,0,0,0
+access_invoice_user13,taxpayer.invoice,account.model_account_move_line,base.group_account_custom,1,0,0,0
+access_invoice_user14,taxpayer.invoice,account.model_account_move_reconcile,base.group_account_custom,1,0,0,0
+access_etax_tax_configuration1 user1,tax.configuration,model_tax_configuration,,1,0,0,0
+access_etax_tax_configuration11,tax.configuration,product.model_product_product,,1,0,0,0
+access_etax_tax_configuration12,tax.configuration,product.model_product_template,,1,0,0,0
+access_etax_tax_configuration13,tax.configuration,model_tax_certificate,,1,1,1,0
+access_etax_tax_configuration13,tax.configuration,model_taxpayer_payment,,1,1,1,0
+
+
+access_etax_etax_attachment user1,etax.attachment,model_etax_attachment,base.group_tax_configuration,1,1,1,0
+
+access_etax_tax_configuration1 user1,etax.attachment,model_etax_attachment,,1,0,0,0
+
+
+access_etax_tax_download user1,file.download,model_file_download,,1,0,0,0
+
+
+
+
+

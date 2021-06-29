@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<openerp>
+    <data>
+        <!-- POS order line report in pivote format -->
+         <record id="expanded_orders_reports_tree" model="ir.ui.view">
+            <field name="name">pos.order.line.tree</field>
+            <field name="model">pos.order.line</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+                 <tree string="POS Order lines">
+                    <field name="order_id" readonly="1"/>
+                    <field name="partner_id" readonly="1"/>
+                    <field name="pos_referance" readonly="1"/>
+                    <field name="product_id" readonly="1"/>
+                    <field name="qty" readonly="1" sum="Total qty"/>
+                    <field name="discount" readonly="1"/>
+                    <field name="price_unit" readonly="1"/>
+                    <field name="price_subtotal" readonly="1" sum="Sum of subtotals"/>
+                    <field name="price_subtotal_incl" readonly="1" sum="Sum of subtotals"/>
+                    <field name="create_date" readonly="1"/>
+                    <field name="order_state" readonly="1"/>
+                    <field name="date_order" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_expanded_orders_reports_graph">
+            <field name="name">pos.order.line.graph</field>
+            <field name="model">pos.order.line</field>
+            <field name="arch" type="xml">
+                <graph string="POS Order lines" type="pivot">
+                    <field name="create_date" type="row"/>
+                    <field name="price_subtotal" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_expanded_orders_reports">
+            <field name="name">Expanded Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos.order.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,graph</field>
+            <field name="domain">[('order_state','in',('paid','done'))]</field>
+            <field name="view_id" ref="expanded_orders_reports_tree"/>
+
+        </record>
+
+    <!--<menuitem name="Report" id="menu_report_for_shop" parent="point_of_sale.menu_point_root" sequence="24"/>-->
+    <menuitem parent="menu_report_for_shop" id="sub_expanded_orders_reports" action="action_expanded_orders_reports" groups="point_of_sale.group_pos_manager,point_of_sale.group_pos_user" sequence="2"/>
+
+    </data>
+</openerp>

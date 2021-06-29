@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+      <record id="employee_reconcile_overspend_form_view" model="ir.ui.view">
+          <field name="name">Reconcile Overspend Form view</field>
+          <field name="model">employee.reconcile.overspend</field>
+          <field name="arch" type="xml" >
+              <form>
+                  <sheet>
+                      <p>
+                          Do you want to register this payment?
+                      </p>
+                      <group>
+                          <group>
+                                <!--<p>For</p>-->
+                                <field name="employee_id" readonly="1"/>
+                                <field name="renaming_balance" readonly="1"/>
+                                <!--<p>With</p>-->
+                                <field name="amount_to_reconcile" readonly="1"/>
+
+                          </group>
+                      </group>
+                      <footer>
+                          <button name="pay_employee_reconcile_overspend" type="object" string="Confirm"/>
+                          <button string="Cancel" class="oe_link" special="cancel" />
+                      </footer>
+                  </sheet>
+              </form>
+          </field>
+      </record>
+
+    <record id="employee_reconcile_overspend_action" model="ir.actions.act_window">
+      <field name="name">Reconcile Overspend Action</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">employee.reconcile.overspend</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="target">new</field>
+    </record>
+
+
+    </data>
+</openerp>

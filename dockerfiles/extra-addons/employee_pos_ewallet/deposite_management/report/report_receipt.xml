@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="report_receipt">
+            <t t-call="report.html_container">
+                    <t t-foreach="docs" t-as="o">
+                        <div class="header">
+                            <div>
+                                <table width="100%" height="40%" style="page-break-inside: avoid;">
+                                    <tr>
+                                        <td width="30%">
+                                            <img class="text-left" t-if="o.company_id.logo_web" t-att-src="'data:image/png;base64,%s' % o.company_id.logo_web" style="max-height:2cm; max-width:5cm;"/>
+                                        </td>
+                                        <td width="50%">
+                                            <p class="text-right">
+                                                <span t-field="o.company_id.street"/><br/>
+                                                <span t-field="o.company_id.street2"/><br/>
+                                                <span t-field="o.company_id.city"/>, 
+                                                <span t-field="o.company_id.state_id.name"/>, 
+                                                <span t-field="o.company_id.zip"/><br/>
+                                                <span t-field="o.company_id.country_id.name"/>
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="page" style="font-family: 'Lucica Grande'; font-size: 15px;">
+                            <!--div class="text-right">Receipt No : 
+                                <span t-field="o.number" style="margin-left:5px" />
+                            </div>
+                            <br/>
+                            <div id="upper" style="text-decoration: underline;font-weight:bold;margin-top:10px">
+                                
+                            </div>-->
+                            <div id="1" style="margin-top:100px;">
+                                <table width="100%">
+                                    <tr>
+                                        <td>
+                                           <h2>
+                                               <strong>
+                                                    <div id="upper" style="font-weight:bold;margin-top:-20px;">Receipt # <span t-field="o.number"/></div>
+                                                </strong>
+                                            </h2> 
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Receipt Date:<span t-field="o.date_due"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Due Date:<span t-field="o.date"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div id="2" style="margin-top:50px;page-break-inside:avoid;">
+                                <table width="100%" style="page-break-inside: avoid;">
+                                    <tr t-foreach="o.get_address()" t-as="ad" >
+                                    <tr>
+                                        <td >
+                                            <p style="text-align: -webkit-left;white-space: nowrap;background-color:#C0C0C0;">
+                                                Invoice To: <span t-field="o.partner_id.name"/><br/>
+                                                <t t-if="ad">
+                                                    <span t-esc="ad['street']" /><br/>
+                                                    <span t-esc="ad['street2']" /><br/>
+                                                    <span t-esc="ad['city']" />, 
+                                                    <span t-esc="ad['state_id']" />, 
+                                                    <span t-esc="ad['zip']" /><br/>
+                                                    <span t-esc="ad['country_id']" />
+                                                </t>
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <center><img t-if="o.state == 'posted'" src="openeducat_ext/static/src/img/index.png" style="max-height:2cm; max-width:8cm;"/></center>
+                                        </td>
+                                    </tr></tr>
+                                </table>
+                            </div>
+                            <div id="3" style="margin-top:80px;page-break-inside:avoid;">
+                                <table width="100%" border='1'>
+                                    <thead>
+                                        <tr style="border-top: 1px solid black;width:100%">
+                                            <td style="width:20%;text-align: -webkit-left;white-space: nowrap;background-color:#C0C0C0;">
+                                                <strong>Source Invoice:</strong>
+                                            </td>
+                                            <td style="width:50%;text-align: -webkit-left;white-space: nowrap;background-color:#C0C0C0;">
+                                                <strong>Description:</strong>
+                                            </td>
+                                            <td style="width:30%;text-align: -webkit-right;white-space: nowrap;background-color:#C0C0C0;">
+                                                <strong>Unit Price</strong>
+                                            </td>
+                                        </tr>
+                                        <tr t-foreach="o.get_invoice_information1()" t-as="line" style="border: 0.5px solid black;text-align: -webkit-left;white-space: nowrap;">
+                                            <tr style="border-top:1px solid black;border-bottom:1px solid black;height:20px;text-align: -webkit-left;white-space: nowrap;">
+                                                <td style="width:20%;text-align: -webkit-left;white-space: nowrap;">
+                                                     <span t-esc="line['inv']" />
+                                                </td>
+                                                <td style="width:50%;text-align: -webkit-left;white-space: nowrap;">
+                                                     <span t-esc="line['name']" />
+                                                </td>
+                                                <td style="width:30%;text-align: -webkit-right;white-space: nowrap;">
+                                                     <span t-esc="line['price']" />
+                                                </td>
+                                            </tr>
+                                        </tr>
+                                        <tr style="border-top: 2px solid black;border-bottom: 2px solid black;width:100%;background-color:#C0C0C0;">
+                                            <td style="width:20%;text-align: -webkit-right;white-space: nowrap;">
+                                            </td>
+                                            <td style="width:50%;text-align: -webkit-right;white-space: nowrap;">
+                                                <strong>Total Amount Paid</strong>
+                                            </td>
+                                            <td style="width:30%;text-align: -webkit-right;white-space: nowrap;">
+                                                <span t-esc="o.get_paid()"/>
+                                            </td>
+                                        </tr>
+                                        
+                                        <!--tr style="border-top: 2px solid black;border-bottom: 2px solid black;width:100%">
+                                            <td style="width:75%;text-align: -webkit-center;white-space: nowrap;">
+                                                 <span t-field="o.mv_invoice_id"/>(<span t-field="o.description"/>)
+                                            </td>
+                                            <td style="width:25%;text-align: -webkit-center;white-space: nowrap;">
+                                                <span t-field="o.price"/>
+                                            </td>
+                                        </tr>
+                                        <tr style="border-top: 2px solid black;border-bottom: 2px solid black;width:100%;background-color:#C0C0C0;">
+                                            <td style="width:20%;text-align: -webkit-right;white-space: nowrap;">
+                                            </td>
+                                            <td style="width:50%;text-align: -webkit-right;white-space: nowrap;">
+                                                 Amount Paid
+                                            </td>
+                                            <td style="width:30%;text-align: -webkit-right;white-space: nowrap;">
+                                                <span t-field="o.amount"/>
+                                            </td>
+                                        </tr-->
+                                        <tr style="border-top: 2px solid black;border-bottom: 2px solid black;width:100%;background-color:#C0C0C0;">
+                                            <td style="width:20%;text-align: -webkit-right;white-space: nowrap;">
+                                            </td>
+                                            <td style="width:50%;text-align: -webkit-right;white-space: nowrap;">
+                                                <strong>Balance</strong>
+                                            </td>
+                                            <td style="width:30%;text-align: -webkit-right;white-space: nowrap;">
+                                                <span t-esc="o.get_balance()"/>
+                                            </td>
+                                        </tr>
+                                        
+                                    </thead>
+                                </table>
+                            </div>
+                            <br/>
+                            <div id="4.1" style="margin-top:20px;page-break-inside:avoid;">
+                                <h4>
+                                   <strong>
+                                        <div id="upper" style="font-weight:bold;margin-top:-20px;">  Current Payment </div>
+                                    </strong>
+                                </h4>
+
+                            </div>
+                            <div id="4" style="margin-top:20px;page-break-inside:avoid;">
+                                <div t-if="o.state ==  'posted' ">
+                                    <table width="100%" style="page-break-inside: avoid;border: 2px solid black">
+                                        <thead>
+                                            <tr style="width:100%">
+                                                <td style="width:auto;text-align: -webkit-left;white-space: nowrap;background-color:#C0C0C0;">
+                                                    <strong>Transaction Date</strong>
+                                                </td>
+                                                <td style="width:auto;text-align: -webkit-left;white-space: nowrap;background-color:#C0C0C0;">
+                                                    <strong>Gateway</strong>
+                                                </td>
+                                                <td style="width:auto;text-align: -webkit-left;white-space: nowrap;background-color:#C0C0C0;">
+                                                    <strong>Transaction ID</strong>
+                                                </td>
+                                                <td style="width:auto;text-align: -webkit-left;white-space: nowrap;background-color:#C0C0C0;">
+                                                    <strong>Amount</strong>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr  t-foreach="o.move_ids[0]" t-as="line" style="border: 0.5px solid black;width;100%">
+                                                <tr style="height:20px;">
+                                                    <td style="text-align: -webkit-left;padding-top:5px;width:auto;white-space: nowrap">
+                                                        <div id="t31" style="margin-left:10%;">
+                                                            <t t-esc="line['date']" />
+                                                        </div>
+                                                    </td>
+                                                    <td style="text-align: -webkit-center;padding-top:5px;width:auto;white-space: nowrap">
+                                                        <div id="t32" style="margin-left:10%;">
+                                                            <t t-esc="line['journal_id'].name" />
+                                                        </div>
+                                                    </td>
+                                                    <td style="text-align: -webkit-center;padding-top:5px;width:auto;white-space: nowrap">
+                                                        <div id="t33" style="margin-left:10%;">
+                                                            <t t-esc="line['ref']" />
+                                                        </div>
+                                                    </td>
+                                                    <td style="text-align: -webkit-center;padding-top:5px;width:auto;white-space: nowrap">
+                                                        <div id="t36" style="margin-left:10%;">
+                                                            <span t-field="o.amount"/>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tr>
+                                            <!--tr style="width:100%">
+                                                <td style="width:auto;text-align: -webkit-left;white-space: nowrap;background-color:#C0C0C0;">
+                                                </td>
+                                                <td style="width:auto;text-align: -webkit-left;white-space: nowrap;background-color:#C0C0C0;">
+                                                </td>
+                                                <td style="width:auto;text-align: -webkit-left;white-space: nowrap;background-color:#C0C0C0;">
+                                                    <strong>Balance</strong>
+                                                </td>
+                                                <td style="width:auto;text-align: -webkit-left;white-space: nowrap;background-color:#C0C0C0;">
+                                                    <strong><span t-field="o.company_id.currency_id.symbol"/><span t-field="o.amount"/></strong>
+                                                </td>
+                                            </tr-->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </template>
+        </data>
+</openerp>
+

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>	
+		<!-- Form View for Demand Notice -->
+		<record id="etax_demand_notice_form" model="ir.ui.view">
+			<field name="name">etax.demand.notice.form</field>
+			<field name="model">etax.demand.notice</field>
+			<field name="arch" type="xml">
+				<form string="Demand Notice" version="7.0">
+					<header>
+						<button name="print_demand_notice" string="Print Demand Notice" type="object" class="oe_highlight" color="red"/>
+						<button name="send_demand_notice" string="Text Demand Notice" type="object" class="oe_highlight" color="red"/>
+					</header>
+					<sheet>
+						<group>
+							<field name="partner_id" string="Name of the Tax Payer" domain="[('e_tax','=',True)]"/>
+							<field name="comment"/>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<!-- Tree View for Demand Notice -->
+		<record id="etax_demand_notice_tree" model="ir.ui.view">
+			<field name="name">etax.demand.notice.tree</field>
+			<field name="model">etax.demand.notice</field>
+			<field name="arch" type="xml">
+				<tree string="Demand Notice">
+					<field name="partner_id"/>
+					<field name="comment"/>
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Search View for Demand Notice -->
+		<record id="etax_demand_notice_search" model="ir.ui.view">
+			<field name="name">etax.demand.notice.search</field>
+			<field name="model">etax.demand.notice</field>
+			<field name="arch" type="xml">
+				<search string="Search Demand Notice">
+					<field name="partner_id" string="Name of the Tax Payer"/>
+				</search>
+			</field>
+		</record>
+		
+		<!-- Action for demand notice -->
+		<record id="action_demand_notice" model="ir.actions.act_window">
+			<field name="name">Demand Notice</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">etax.demand.notice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+		</record>
+		
+		<!-- Menu for Demand Notice -->
+        <menuitem id="etax_demand_notice_menu" parent="etax_top_menu" name="Demand Notice" sequence="2" groups="base.group_demand_notice"/>
+        <menuitem id="etax_demand_notice_child" parent="etax_demand_notice_menu" name="Demand Notice" action="action_demand_notice" sequence="1" />
+
+	</data>
+</openerp>

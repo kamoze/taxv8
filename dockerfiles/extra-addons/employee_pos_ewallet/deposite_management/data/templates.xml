@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="email_template_employee_deposite_invoice" model="email.template">
+            <field name="name">Employee Deposit Invoice</field>
+            <field name="email_from">${user.company_id.email} or ${(user.email)|safe}</field>
+            <field name="email_to">${object.name.work_email}</field>
+            <field name="subject">E-wallet Deposit Confirmation Mail</field>
+            <field name="auto_delete" eval="True"/>
+             <field name="model_id" ref="model_employee_deposits"/>
+            <field name="lang">${user.company_id.partner_id.lang}</field>
+            <field name="body_html">
+                <![CDATA[
+                <p>Dear ${object.name.name},</p><br/>
+                <p>You have successfully made a deposit of ${object.amount} on ${object.get_localised_date()}</p><br/>
+                <p>Your current balance is ${object.name.emp_balance_amount}</p><br/>
+                <p>Thank you.</p><br/>
+                <p>Accounts Office</p><br/>
+                <p>${user.company_id.name}</p><br/>
+                        ]]>
+            </field>
+        </record>
+
+        <record id="email_template_employee_deposite_funded" model="email.template">
+            <field name="name">Employee Deposit Funded</field>
+            <field name="email_from">${user.company_id.email} or ${(user.email)|safe}</field>
+            <field name="email_to">${object.name.work_email}</field>
+            <field name="subject">Deposit Funded</field>
+            <field name="auto_delete" eval="True"/>
+             <field name="model_id" ref="model_employee_deposits"/>
+            <field name="lang">${user.company_id.partner_id.lang}</field>
+            <field name="body_html">
+                <![CDATA[
+                <p>Dear ${object.name.name},</p><br/>
+                <p></p><br/>
+                <p></p><br/>
+                <p>Thank you.</p><br/>
+                <p>Admissions & Careers Office</p><br/>
+                <p>${user.company_id.name}</p><br/>
+                        ]]>
+            </field>
+        </record>
+
+        <record id="email_template_employee_fund_transfer" model="email.template">
+            <field name="name">Employee Fund Transfer</field>
+            <field name="email_from">${user.company_id.email} or ${(user.email)|safe}</field>
+            <field name="email_to">${object.name.work_email}</field>
+            <field name="subject">E-wallet Credit Confirmation Mail</field>
+            <field name="auto_delete" eval="True"/>
+             <field name="model_id" ref="model_employee_fund_transfer_confirmation"/>
+            <field name="lang">${user.company_id.partner_id.lang}</field>
+            <field name="body_html">
+                <![CDATA[
+                <p>Dear <b> ${object.name} </b>,</p><br/>
+                <p>Your account has been credited with <b> ${object.amount_transfer} </b> on ${object.date}</p><br/>
+                <p>Your current balance is ${object.total_deposite_balance}</p><br/>
+                <p>Thank you.</p><br/>
+                <p>Accounts Office</p><br/>
+                <p>${user.company_id.name}</p><br/>
+                        ]]>
+            </field>
+        </record>
+
+
+         <record id="email_template_employee_fund_transfer_self_notification" model="email.template">
+            <field name="name">Employee Fund Transfer</field>
+            <field name="email_from">${user.company_id.email} or ${(user.email)|safe}</field>
+            <field name="email_to">${object.name.work_email}</field>
+            <field name="subject">Fund Transfer Confirmation Mail</field>
+            <field name="auto_delete" eval="True"/>
+             <field name="model_id" ref="model_employee_fund_transfer_confirmation"/>
+            <field name="lang">${user.company_id.partner_id.lang}</field>
+            <field name="body_html">
+                <![CDATA[
+                <p>Dear <b> ${user.name} </b>,</p><br/>
+                <p>You have successfully made a transfer of <b> ${object.amount_transfer} </b> to <b> ${object.account_no} </b> on ${object.date}</p><br/>
+                <p>Your current balance is ${object.total_expense_balance}</p><br/>
+                <p>Thank you.</p><br/>
+                <p>Accounts Office</p><br/>
+                <p>${user.company_id.name}</p><br/>
+                        ]]>
+            </field>
+        </record>
+
+        <!-- Employee Pay Out e-mail templates -->
+         <record id="email_template_employee_pay_out" model="email.template">
+            <field name="name">Employee Pay Out </field>
+            <field name="email_from">${user.company_id.email} or ${(user.email)|safe}</field>
+            <field name="email_to">${object.name.work_email}</field>
+            <field name="subject">Ewallet withdrawal Confirmation Mail</field>
+            <field name="auto_delete" eval="True"/>
+             <field name="model_id" ref="model_employee_money_payment"/>
+            <field name="lang">${user.company_id.partner_id.lang}</field>
+            <field name="body_html">
+                <![CDATA[
+                <p>Dear <b> ${object.name} </b> , </p><br/>
+                <p>Money Withdrawn <b> ${object.amount_to_pay} </b> on ${object.date}.</p><br/>
+                <p>Your current balance is ${object.emp_id.available_balance}. </p><br/>
+                <p>Thank you.</p><br/>
+                <p>Accounts Office</p><br/>
+                <p>${user.company_id.name}</p><br/>
+                        ]]>
+            </field>
+        </record>
+
+        <!-- Employee Pay In e-mail templates -->
+         <record id="email_template_employee_pay_in" model="email.template">
+            <field name="name">Employee Pay In</field>
+            <field name="email_from">${user.company_id.email} or ${(user.email)|safe}</field>
+            <field name="email_to">${object.name.work_email}</field>
+            <field name="subject">Ewallet Deposit Confirmation Mail</field>
+            <field name="auto_delete" eval="True"/>
+             <field name="model_id" ref="model_employee_pay_in_wiz"/>
+            <field name="lang">${user.company_id.partner_id.lang}</field>
+            <field name="body_html">
+                <![CDATA[
+                <p>Dear <b> ${object.name }</b>,</p><br/>
+                <p>Money Deposited <b> ${object.employee_deposite_id.amount} </b> on ${object.employee_deposite_id.date}.</p><br/>
+                <p>Your current balance is ${object.employee_deposite_id.name.available_balance}</p><br/>
+                <p>Thank you.</p><br/>
+                <p>Accounts Office</p><br/>
+                <p>${user.company_id.name}</p><br/>
+                        ]]>
+            </field>
+        </record>
+
+        <!-- Employee Reconcilation email for deposite amount  -->
+         <record id="schedular_reconcilation_email_notification_for_emp" model="email.template">
+            <field name="name">Employee Payment Reconcilation Email</field>
+            <field name="email_from">${user.company_id.email} or ${(user.email)|safe}</field>
+            <field name="email_to">${object.name.work_email}</field>
+            <field name="subject">Credit Amount Notification</field>
+            <field name="auto_delete" eval="True"/>
+             <field name="model_id" ref="model_employee_deposits"/>
+            <field name="lang">${user.company_id.partner_id.lang}</field>
+            <field name="body_html">
+               <![CDATA[
+                <p>Dear ${object.name.name},</p><br/>
+                <p>You have successfully made a deposit of ${object.paid_amount} on ${object.date}</p><br/>
+                <p>Your current balance is ${object.name.available_balance}</p><br/>
+                <p>Thank you.</p><br/>
+                <p>Accounts Office</p><br/>
+                <p>${object.name.user_id.company_id.name}</p><br/>
+                        ]]>
+            </field>
+        </record>
+
+        <!-- Sent payment notification to parent also -->
+        <record id="account_voucher_receipt_report_sent_to_parent" model="email.template">
+            <field name="name">Account Voucher Receipt Report</field>
+            <field name="email_from">${user.company_id.email} or ${(user.email)|safe}</field>
+            <field name="email_to">${object.partner_id.email}</field>
+            <field name="subject">Payment Notification</field>
+            <field name="auto_delete" eval="True"/>
+             <field name="model_id" ref="model_account_voucher"/>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html">
+                <![CDATA[
+                <p>Hi ${object.partner_id.name},</p>
+                <p> This is to notify you of the payment you have just made. Attached is a copy of the receipt.</p>
+                <p> Thank you.</p>
+                <br/>
+                <p>Yours truly, </p>
+                <p>Account Department. </p>
+                <p>${object.company_id.email} </p>
+                ]]>
+            </field>
+        </record>
+    </data>
+</openerp>

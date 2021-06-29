@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="group_op_back_office_admin" model="res.groups">
+			<field name="name">Back Office Admin</field>
+		</record>
+
+        <record id="group_op_library" model="res.groups">
+			<field name="name">Library</field>
+		</record>
+		<record id="group_op_parent" model="res.groups">
+			<field name="name">Parent</field>
+		</record>
+
+        	<record id="group_op_faculty" model="res.groups">
+			<field name="name">Tutor</field>
+		</record>
+
+         <record id="group_op_faculty_manager" model="res.groups">
+			<field name="name">Tutor Manager</field>
+		  </record>
+
+        <record id="group_op_back_office" model="res.groups">
+			<field name="name">Back Office</field>
+		</record>
+        <record id="deposite_management_group" model="res.groups">
+            <field name="name">Deposit/Expense</field>
+            <field name="implied_ids" eval="[(4, ref('group_op_back_office_admin')),(4, ref('group_op_back_office'))]"/>
+        </record>
+
+        <!--<record model="ir.rule" id="student_deposite_rules_for_student">-->
+            <!--<field name="name">Student Deposit Rules For Student</field>-->
+            <!--<field name="model_id" ref="model_student_deposits" />-->
+            <!--<field name="groups" eval="[(4, ref('openeducat_erp.group_op_student'))]" />-->
+            <!--<field name="domain_force"> [('name.user_id','=',user.id)]</field>-->
+       <!--</record>-->
+
+       <record model="ir.rule" id="employee_deposite_rules_for_employee">
+            <field name="name">Employee Deposit Rules For Employee</field>
+            <field name="model_id" ref="model_employee_deposits" />
+            <field name="groups" eval="[(4, ref('base.group_user'))]" />
+            <field name="domain_force"> [('name.user_id','=',user.id)]</field>
+       </record>
+       
+       <record model="ir.rule" id="employee_deposite_rules_for_manager">
+            <field name="name">Employee Deposit Rules For Employee</field>
+            <field name="model_id" ref="model_employee_deposits" />
+            <field name="groups" eval="[(4, ref('account.group_account_manager'))]" />
+            <field name="domain_force"> [(1, '=', 1)]</field>
+       </record>
+       <record model="ir.rule" id="hr_employee_rules_for_manager">
+            <field name="name">Employee Rules For Employee</field>
+            <field name="model_id" ref="model_hr_employee" />
+            <field name="groups" eval="[(4, ref('account.group_account_manager'))]" />
+            <field name="domain_force"> [(1, '=', 1)]</field>
+       </record>
+       <record model="ir.rule" id="account_rules_for_manager">
+            <field name="name">Account Rules For account</field>
+            <field name="model_id" ref="model_account_invoice" />
+            <field name="groups" eval="[(4, ref('account.group_account_manager'))]" />
+            <field name="domain_force"> [(1, '=', 1)]</field>
+       </record>
+       <record model="ir.rule" id="account_line_rules_for_manager">
+            <field name="name">Account Rules For account manager</field>
+            <field name="model_id" ref="account.model_account_invoice_line" />
+            <field name="groups" eval="[(4, ref('account.group_account_manager'))]" />
+            <field name="domain_force"> [(1, '=', 1)]</field>
+       </record>
+       <record model="ir.rule" id="account_voucher_rules_for_manager">
+            <field name="name">Account vouchar eule for manager</field>
+            <field name="model_id" ref="account_voucher.model_account_voucher"/>
+            <field name="groups" eval="[(4, ref('account.group_account_manager'))]" />
+            <field name="domain_force"> [(1, '=', 1)]</field>
+       </record>
+
+       <!--<record model="ir.rule" id="student_expenses_rules_for_student">-->
+            <!--<field name="name">Student Expenses Rules For Student</field>-->
+            <!--<field name="model_id" ref="model_student_expenses" />-->
+            <!--<field name="groups" eval="[(4, ref('openeducat_erp.group_op_student'))]" />-->
+            <!--<field name="domain_force"> [('name.user_id','=',user.id)]</field>-->
+       <!--</record>-->
+
+       <record model="ir.rule" id="employee_expenses_rules_for_employee">
+            <field name="name">Employee Expenses Rules For Employee</field>
+            <field name="model_id" ref="model_employee_expenses" />
+            <field name="groups" eval="[(4, ref('base.group_user'))]" />
+            <field name="domain_force"> [('name.user_id','=',user.id)]</field>
+       </record>
+
+        <record model="ir.rule" id="employee_rules_for_hr_employee">
+            <field name="name">Simple Employee Rules</field>
+            <field name="model_id" ref="model_hr_employee" />
+            <field name="groups" eval="[(4, ref('base.group_user'))]" />
+            <field name="domain_force"> [('user_id','=',user.id)]</field>
+       </record>
+
+	   <record model="ir.rule" id="employee_status_rule_adm">
+	       <field name="name">Employee See Own Invoices</field>
+	       <field name="model_id" ref="model_account_invoice"/>
+	       <field name="domain_force">[('partner_id.id','=',user.partner_id.id)]</field>
+	       <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+	   </record>
+
+       <record model="ir.rule" id="ir_values_account_voucher">
+	      <field name="name">Customer Payment HR User</field>
+	      <field name="model_id" ref="account_voucher.model_account_voucher"/>
+	      <field name="domain_force">[('state','=','posted'),('partner_id.id', '=', user.partner_id.id)]</field>
+	      <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+       </record>
+
+    </data>
+</openerp>

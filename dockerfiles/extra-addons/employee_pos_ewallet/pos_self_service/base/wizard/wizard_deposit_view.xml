@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!--<menuitem id="menu_deposit"-->
+                  <!--name="Customer Deposit"-->
+                  <!--parent="account.menu_finance"/>-->
+
+        <record id="wizard_customer_deposit_form" model="ir.ui.view">
+            <field name="name">wizard.customer.deosit.form</field>
+            <field name="model">wizard.customer.deposit</field>
+            <field name="arch" type="xml">
+                <form string="Customer Deposit">
+                    <group>
+                        <field name="partner_id"/>
+                        <field name="amount"/>
+                    </group>
+                    <footer>
+                        <button name="action_deposit" class="oe_highlight" string="Deposit"
+                                type="object"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_wizard_customer_deposit" model="ir.actions.act_window">
+            <field name="name">Put Amount</field>
+            <field name="res_model">wizard.customer.deposit</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <!--<menuitem action="action_wizard_customer_deposit"-->
+                  <!--id="menu_wizard_customer_deposit"-->
+                  <!--parent="menu_deposit"/>-->
+
+    </data>
+</openerp>

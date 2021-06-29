@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <report
+            id="shop_report_id"
+            string="Shop Report"
+            model="shop.report.wizard"
+            report_type="qweb-pdf"
+            file="employee_pos_ewallet.template_shop_report"
+            name="employee_pos_ewallet.template_shop_report"
+        />
+
+    </data>
+</openerp>
